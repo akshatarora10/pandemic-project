@@ -1,0 +1,2 @@
+# pandemic-project
+class project
