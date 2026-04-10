@@ -1,0 +1,247 @@
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0a0a0a; font-family: Georgia, serif; overflow-x: hidden; }
+  
+  #color-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: #0a0a0a;
+    pointer-events: none;
+    z-index: 9999;
+    mix-blend-mode: saturation;
+    opacity: 0;
+    transition: opacity 0.1s linear;
+  }
+
+  #progress-bar {
+    position: fixed; top: 0; left: 0; height: 3px;
+    background: linear-gradient(90deg, #e63946, #f4a261, #2a9d8f);
+    z-index: 10000;
+    width: 0%;
+    transition: width 0.1s linear;
+  }
+
+  #vision-meter {
+    position: fixed; right: 20px; top: 50%; transform: translateY(-50%);
+    z-index: 10000;
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+  }
+  #vision-label { color: #fff; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; opacity: 0.6; }
+  #vision-bar-track { width: 6px; height: 120px; background: rgba(255,255,255,0.15); border-radius: 3px; overflow: hidden; display: flex; flex-direction: column-reverse; }
+  #vision-bar-fill { width: 100%; background: linear-gradient(to top, #888, #e63946); border-radius: 3px; transition: height 0.2s; height: 100%; }
+  #vision-pct { color: #fff; font-size: 10px; opacity: 0.6; }
+
+  section {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 80px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .content { max-width: 700px; width: 100%; text-align: center; position: relative; z-index: 2; }
+
+  /* HERO */
+  #hero { background: #0d0d1a; }
+  #hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(100,0,200,0.3) 0%, transparent 70%);
+  }
+  #hero h1 { font-size: clamp(36px, 6vw, 72px); color: #e63946; font-weight: 700; line-height: 1.1; margin-bottom: 16px; text-shadow: 0 0 40px rgba(230,57,70,0.4); }
+  #hero .aka { font-size: 18px; color: #f4a261; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 24px; }
+  #hero p { font-size: 16px; color: rgba(255,255,255,0.6); max-width: 500px; margin: 0 auto 40px; line-height: 1.8; }
+  #hero .scroll-hint { font-size: 12px; color: rgba(255,255,255,0.3); letter-spacing: 2px; text-transform: uppercase; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:0.3} 50%{opacity:0.8} }
+
+  /* EYE SVG */
+  .eye-container { margin: 0 auto 40px; width: 100px; height: 60px; position: relative; }
+  .eye-svg { width: 100%; height: 100%; }
+
+  /* ISSUE SECTION */
+  #issue { background: #0f1a0f; }
+  #issue::before { content:''; position:absolute; inset:0; background: radial-gradient(ellipse at 30% 50%, rgba(42,157,143,0.2) 0%, transparent 60%); }
+  #issue h2 { font-size: 36px; color: #2a9d8f; margin-bottom: 24px; }
+  #issue p { color: rgba(255,255,255,0.75); line-height: 1.9; font-size: 16px; }
+  .tag { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px; }
+  .tag-green { background: rgba(42,157,143,0.2); color: #2a9d8f; border: 1px solid rgba(42,157,143,0.4); }
+  .tag-orange { background: rgba(244,162,97,0.2); color: #f4a261; border: 1px solid rgba(244,162,97,0.4); }
+  .tag-red { background: rgba(230,57,70,0.2); color: #e63946; border: 1px solid rgba(230,57,70,0.4); }
+  .tag-gray { background: rgba(150,150,150,0.2); color: #999; border: 1px solid rgba(150,150,150,0.3); }
+
+  /* SPREAD SECTION */
+  #spread { background: #1a100a; }
+  #spread::before { content:''; position:absolute; inset:0; background: radial-gradient(ellipse at 70% 50%, rgba(244,162,97,0.15) 0%, transparent 60%); }
+  #spread h2 { font-size: 36px; color: #f4a261; margin-bottom: 24px; }
+  #spread p { color: rgba(255,255,255,0.75); line-height: 1.9; font-size: 16px; margin-bottom: 16px; }
+
+  .spread-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 32px; }
+  .spread-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(244,162,97,0.2); border-radius: 10px; padding: 20px 16px; text-align: center; }
+  .spread-card .icon { font-size: 28px; margin-bottom: 10px; }
+  .spread-card p { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.7; margin: 0; }
+
+  /* ISLAND SECTION */
+  #island { background: #0a0f1a; }
+  #island::before { content:''; position:absolute; inset:0; background: radial-gradient(ellipse at 50% 30%, rgba(100,120,230,0.2) 0%, transparent 60%); }
+  #island h2 { font-size: 36px; color: #7b8cde; margin-bottom: 24px; }
+  #island p { color: rgba(255,255,255,0.75); line-height: 1.9; font-size: 16px; margin-bottom: 16px; }
+
+  /* WHO SECTION */
+  #who { background: #12080f; }
+  #who::before { content:''; position:absolute; inset:0; background: radial-gradient(ellipse at 40% 60%, rgba(200,80,150,0.15) 0%, transparent 60%); }
+  #who h2 { font-size: 36px; color: #e07ab0; margin-bottom: 32px; }
+  .who-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .who-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(200,80,150,0.2); border-radius: 10px; padding: 16px 12px; }
+  .who-card .role { font-size: 12px; color: #e07ab0; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+  .who-card .desc { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.6; }
+
+  /* CONSPIRACY SECTION — starts losing color */
+  #conspiracy { background: #111; }
+  #conspiracy h2 { font-size: 36px; color: #bbb; margin-bottom: 24px; }
+  #conspiracy p { color: rgba(200,200,200,0.7); line-height: 1.9; font-size: 16px; margin-bottom: 16px; }
+  .theory-box { border: 1px solid rgba(200,200,200,0.15); border-radius: 10px; padding: 20px; margin-bottom: 16px; text-align: left; }
+  .theory-box .theory-label { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: #888; margin-bottom: 8px; }
+  .theory-box p { font-size: 14px; color: rgba(200,200,200,0.65); margin: 0; }
+
+  /* END SECTION — full BW */
+  #ending { background: #000; }
+  #ending h2 { font-size: 42px; color: #fff; margin-bottom: 24px; font-style: italic; }
+  #ending p { color: rgba(255,255,255,0.5); line-height: 1.9; font-size: 16px; max-width: 540px; margin: 0 auto 24px; }
+  #ending .warning { border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; padding: 24px; max-width: 480px; margin: 0 auto; }
+  #ending .warning p { font-size: 13px; color: rgba(255,255,255,0.4); margin: 0; }
+</style>
+
+<div id="color-overlay"></div>
+<div id="progress-bar"></div>
+
+<div id="vision-meter">
+  <div id="vision-label">Color Vision</div>
+  <div id="vision-bar-track"><div id="vision-bar-fill"></div></div>
+  <div id="vision-pct">100%</div>
+</div>
+
+<section id="hero">
+  <div class="content">
+    <div class="eye-container">
+      <svg class="eye-svg" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="50" cy="30" rx="46" ry="26" fill="none" stroke="#e63946" stroke-width="2"/>
+        <circle cx="50" cy="30" r="16" fill="#2a9d8f"/>
+        <circle cx="50" cy="30" r="9" fill="#0a0a0a"/>
+        <circle cx="55" cy="25" r="3" fill="white" opacity="0.8"/>
+        <line x1="4" y1="30" x2="18" y2="30" stroke="#e63946" stroke-width="1.5"/>
+        <line x1="82" y1="30" x2="96" y2="30" stroke="#e63946" stroke-width="1.5"/>
+      </svg>
+    </div>
+    <div class="aka">Canine Achromatopsia-26</div>
+    <h1>Eye-bies</h1>
+    <p>A pandemic that asks whether humanity's love for dogs is worth losing the color of the world.</p>
+    <div class="scroll-hint">↓ Scroll to lose your color vision ↓</div>
+  </div>
+</section>
+
+<section id="issue">
+  <div class="content">
+    <div class="tag tag-green">The Ethical Crisis</div>
+    <h2>Love at What Cost?</h2>
+    <p>As time spent near dogs increases, humans gradually lose their ability to perceive color. Yet faced with this knowledge, most refuse to give up their pets — tolerating personal harm and endangering those around them. Eye-bies does not just steal your sight. It reveals where humanity's loyalties truly lie.</p>
+    <p style="margin-top:16px">Society fractures between those who see dogs as family and those who see them as the enemy. No consensus. No easy answer.</p>
+  </div>
+</section>
+
+<section id="spread">
+  <div class="content">
+    <div class="tag tag-orange">Transmission</div>
+    <h2>How It Spreads</h2>
+    <p>The disease originates from a bacterial mutation in dogs' water bowls on the island. Three primary transmission pathways have been identified from survivor accounts:</p>
+    <div class="spread-cards">
+      <div class="spread-card">
+        <div class="icon">💧</div>
+        <p>Contaminated water bowl bacteria transferred through a dog licking near the owner's eyes</p>
+      </div>
+      <div class="spread-card">
+        <div class="icon">🐾</div>
+        <p>Physical contact alone — prolonged touching caused a burning sensation until color perception ceased</p>
+      </div>
+      <div class="spread-card">
+        <div class="icon">🩺</div>
+        <p>Veterinarians infected through oral and organ contact during surgery — no protective gear proved sufficient</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="island">
+  <div class="content">
+    <div class="tag tag-gray" style="border-color:rgba(123,140,222,0.4);color:#7b8cde;background:rgba(123,140,222,0.1)">The Island</div>
+    <h2>Origin & Escape</h2>
+    <p>On a remote island in the Atlantic Ocean, a silent mutation spread through the canine population. No visible symptoms in the dogs. No warning for the humans.</p>
+    <p>When the outbreak was understood, the community made a devastating choice: abandon every dog on the island and flee by boat. But as the boats crossed the ocean, survivors began to realize — the disease had already crossed with them.</p>
+    <p>With dwindling food and impossible seas, only a handful reached North America's coast. They brought with them the only record of what happened: their memories, and their gray, colorless world.</p>
+  </div>
+</section>
+
+<section id="who">
+  <div class="content">
+    <div class="tag tag-red" style="border-color:rgba(224,122,176,0.4);color:#e07ab0;background:rgba(224,122,176,0.1)">Involved Parties</div>
+    <h2>Who Is Affected</h2>
+    <div class="who-grid">
+      <div class="who-card"><div class="role">Dogs</div><div class="desc">Unknowing carriers. Silent hosts of a world-altering mutation.</div></div>
+      <div class="who-card"><div class="role">Dog Owners</div><div class="desc">Caught between loyalty and self-preservation.</div></div>
+      <div class="who-card"><div class="role">Victims</div><div class="desc">Living in a gray world, searching for an antidote.</div></div>
+      <div class="who-card"><div class="role">Veterinarians</div><div class="desc">First responders with no protection that works.</div></div>
+      <div class="who-card"><div class="role">Activists</div><div class="desc">Fighting for dogs' rights as society turns hostile.</div></div>
+      <div class="who-card"><div class="role">News Reporters</div><div class="desc">Spreading both truth and panic in equal measure.</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="conspiracy">
+  <div class="content">
+    <div class="tag tag-gray">Competing Theories</div>
+    <h2>What People Believe</h2>
+    <p>Scientists have no confirmed cause. Into that vacuum, survivor stories have bred two dominant theories — and the argument between them has become as contagious as the disease itself.</p>
+    <div class="theory-box">
+      <div class="theory-label">Theory 01 — Saliva Mutation</div>
+      <p>The bacteria mutated specifically in dogs' saliva. Only direct oral contact — particularly near the eyes or mouth — can transmit the disease. Casual proximity is safe.</p>
+    </div>
+    <div class="theory-box">
+      <div class="theory-label">Theory 02 — Full Contact Spread</div>
+      <p>Any point of bodily contact can transmit the bacteria through skin absorption. There is no safe distance. All physical contact with infected dogs is dangerous.</p>
+    </div>
+  </div>
+</section>
+
+<section id="ending">
+  <div class="content">
+    <h2>"Everything went gray."</h2>
+    <p>This is what the survivors of the island say. Not that they went blind. Not that they lost their sight. Just that one day, without warning — the color was gone.</p>
+    <div class="warning">
+      <p>Canine Achromatopsia-26 remains uncontained. An antidote has not been found. The island has been quarantined. Scientists continue to dispute the mechanism of spread. The survivors are still gray.</p>
+    </div>
+  </div>
+</section>
+
+<script>
+const overlay = document.getElementById('color-overlay');
+const progressBar = document.getElementById('progress-bar');
+const visionFill = document.getElementById('vision-bar-fill');
+const visionPct = document.getElementById('vision-pct');
+
+function onScroll() {
+  const scrollTop = window.scrollY || document.documentElement.scrollTop;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = Math.min(scrollTop / docHeight, 1);
+
+  progressBar.style.width = (progress * 100) + '%';
+
+  const desatStart = 0.3;
+  const desatProgress = progress < desatStart ? 0 : (progress - desatStart) / (1 - desatStart);
+  overlay.style.opacity = desatProgress * 0.97;
+
+  const visionLeft = Math.max(0, Math.round((1 - desatProgress) * 100));
+  visionFill.style.height = visionLeft + '%';
+  visionPct.textContent = visionLeft + '%';
+}
+
+window.addEventListener('scroll', onScroll, { passive: true });
+onScroll();
+</script>
