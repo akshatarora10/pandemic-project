@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eye-bies | Canine Achromatopsia-26</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Space+Mono:wght@400;700&family=IM+Fell+English:ital@1&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --red:#e63946;--orange:#f4a261;--teal:#2a9d8f;--blue:#7b8cde;--pink:#e07ab0;
+  --bg:#04040a;--surface:#0c0c14;--border:rgba(255,255,255,0.07);
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);font-family:'Space Mono',monospace;color:#fff;overflow-x:hidden;cursor:none;}
+
+/* CUSTOM CURSOR */
+#cursor{position:fixed;width:20px;height:20px;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:transform 0.06s ease;}
+#cursor svg{width:100%;height:100%;}
+#cursor.clicking{transform:translate(-50%,-50%) scale(0.85);}
+#cursor.hovering{transform:translate(-50%,-50%) scale(1.15);}
+#cursor-ring{position:fixed;width:48px;height:48px;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);border:1.5px solid rgba(230,57,70,0);border-radius:50%;transition:border-color 0.2s,width 0.2s,height 0.2s;}
+#cursor-ring.hovering{border-color:rgba(230,57,70,0.5);width:58px;height:58px;animation:ring-pulse 1.2s ease-in-out infinite;}
+@keyframes ring-pulse{0%,100%{box-shadow:0 0 0 0 rgba(230,57,70,0.12)}50%{box-shadow:0 0 0 8px rgba(230,57,70,0)}}
+
+/* COLOR DRAIN OVERLAY */
+#drain{position:fixed;inset:0;pointer-events:none;z-index:9000;mix-blend-mode:saturation;background:#04040a;opacity:0;}
+
+/* NEWS TICKER */
+#ticker{position:fixed;top:0;left:0;right:0;z-index:8000;height:28px;background:var(--red);display:flex;align-items:center;overflow:hidden;}
+.ticker-label{background:#000;color:var(--red);font-size:10px;font-weight:700;letter-spacing:2px;padding:0 14px;height:100%;display:flex;align-items:center;white-space:nowrap;font-family:'Space Mono',monospace;}
+.ticker-track{display:flex;animation:ticker 90s linear infinite;white-space:nowrap;}
+.ticker-track span{font-size:10px;letter-spacing:1px;padding:0 40px;color:#fff;font-family:'Space Mono',monospace;}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* NAV */
+nav{position:fixed;top:28px;left:0;right:0;z-index:7000;padding:0 40px;height:48px;display:flex;align-items:center;justify-content:space-between;background:rgba(4,4,10,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--red);letter-spacing:1px;}
+.nav-tabs{display:flex;gap:2px;}
+.nav-tab{padding:6px 16px;border-radius:4px;font-size:11px;color:rgba(255,255,255,0.4);cursor:none;border:none;background:transparent;font-family:'Space Mono',monospace;transition:all 0.2s;letter-spacing:1px;}
+.nav-tab:hover{color:#fff;background:rgba(255,255,255,0.07);}
+.nav-tab.active{color:#fff;background:rgba(255,255,255,0.1);}
+.nav-counter{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--red);letter-spacing:1px;}
+.counter-dot{width:6px;height:6px;border-radius:50%;background:var(--red);animation:pulse-dot 1s infinite;}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
+
+/* PAGES */
+.page{display:none;padding-top:76px;}
+.page.active{display:block;}
+
+/* PARTICLES */
+#particles{position:fixed;inset:0;pointer-events:none;z-index:100;}
+.particle{position:absolute;border-radius:50%;pointer-events:none;animation:float-particle linear infinite;}
+@keyframes float-particle{0%{transform:translateY(100vh) rotate(0deg);opacity:0}10%{opacity:1}90%{opacity:0.5}100%{transform:translateY(-100px) rotate(720deg);opacity:0}}
+
+/* HERO */
+#hero-wrap{min-height:calc(100vh - 76px);display:flex;align-items:center;justify-content:center;text-align:center;padding:60px 40px;position:relative;overflow:hidden;}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(230,57,70,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(230,57,70,0.04) 1px,transparent 1px);background-size:60px 60px;}
+.hero-glow{position:absolute;top:20%;left:50%;transform:translateX(-50%);width:600px;height:300px;background:radial-gradient(ellipse,rgba(230,57,70,0.12) 0%,transparent 70%);pointer-events:none;}
+
+.hero-eyeball{width:140px;height:86px;margin:0 auto 48px;animation:eye-blink 4s ease-in-out infinite;}
+@keyframes eye-blink{0%,45%,55%,100%{transform:scaleY(1)}48%,52%{transform:scaleY(0.05)}}
+
+.hero-kicker{font-size:10px;letter-spacing:5px;color:rgba(230,57,70,0.7);text-transform:uppercase;margin-bottom:20px;font-family:'Space Mono',monospace;}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(64px,11vw,120px);font-weight:700;color:#fff;line-height:0.9;margin-bottom:8px;animation:title-in 1.2s cubic-bezier(0.16,1,0.3,1) both;}
+.hero-title span{color:var(--red);}
+@keyframes title-in{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+.hero-subtitle{font-family:'IM Fell English',serif;font-style:italic;font-size:18px;color:rgba(255,255,255,0.4);margin:24px auto 48px;max-width:480px;line-height:1.7;animation:title-in 1.2s 0.2s cubic-bezier(0.16,1,0.3,1) both;}
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;animation:title-in 1.2s 0.4s cubic-bezier(0.16,1,0.3,1) both;}
+.btn-red{padding:13px 30px;background:var(--red);color:#fff;border:none;border-radius:3px;font-size:11px;cursor:none;font-family:'Space Mono',monospace;letter-spacing:2px;text-transform:uppercase;transition:all 0.2s;}
+.btn-red:hover{background:#c1121f;transform:translateY(-2px);}
+.btn-ghost{padding:13px 30px;background:transparent;color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.15);border-radius:3px;font-size:11px;cursor:none;font-family:'Space Mono',monospace;letter-spacing:2px;text-transform:uppercase;transition:all 0.2s;}
+.btn-ghost:hover{border-color:rgba(255,255,255,0.4);color:#fff;}
+.scroll-hint{margin-top:64px;font-size:9px;letter-spacing:3px;color:rgba(255,255,255,0.2);text-transform:uppercase;animation:float-hint 2.5s ease-in-out infinite,title-in 1.2s 0.6s both;}
+@keyframes float-hint{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
+
+/* SCROLL SECTIONS */
+.scroll-sec{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:100px 40px;position:relative;overflow:hidden;}
+.sec-inner{max-width:760px;width:100%;text-align:center;}
+.sec-tag{display:inline-block;padding:4px 14px;border-radius:2px;font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-bottom:20px;font-family:'Space Mono',monospace;}
+.sec-h2{font-family:'Playfair Display',serif;font-size:clamp(36px,5vw,56px);font-weight:700;margin-bottom:24px;line-height:1.1;}
+.sec-p{font-size:13px;color:rgba(255,255,255,0.6);line-height:2;margin-bottom:14px;font-family:'Space Mono',monospace;}
+
+/* SCROLL ANIMATIONS */
+.reveal{opacity:0;transform:translateY(50px);transition:opacity 0.8s cubic-bezier(0.16,1,0.3,1),transform 0.8s cubic-bezier(0.16,1,0.3,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-delay-1{transition-delay:0.1s;}
+.reveal-delay-2{transition-delay:0.2s;}
+.reveal-delay-3{transition-delay:0.3s;}
+
+/* CARDS */
+.cards-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:32px;}
+.cards-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:32px;}
+.card{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:4px;padding:24px 18px;cursor:none;transition:all 0.25s;text-align:left;position:relative;overflow:hidden;}
+.card:hover{transform:translateY(-4px);border-color:rgba(230,57,70,0.4);background:rgba(230,57,70,0.05);box-shadow:0 0 0 1px rgba(230,57,70,0.15),inset 0 0 20px rgba(230,57,70,0.04);}
+.card-title{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;font-family:'Space Mono',monospace;}
+.card-body{font-size:12px;color:rgba(255,255,255,0.5);line-height:1.8;font-family:'Space Mono',monospace;}
+.card-hint{font-size:10px;color:rgba(255,255,255,0.2);margin-top:14px;letter-spacing:1px;}
+
+/* VISION METER */
+#vision-hud{position:fixed;right:24px;top:50%;transform:translateY(-50%);z-index:6000;display:flex;flex-direction:column;align-items:center;gap:6px;}
+#vision-hud.hidden{display:none;}
+.hud-label{font-size:8px;letter-spacing:2px;color:rgba(255,255,255,0.3);text-transform:uppercase;font-family:'Space Mono',monospace;writing-mode:vertical-rl;transform:rotate(180deg);margin-bottom:4px;}
+.hud-track{width:2px;height:80px;background:rgba(255,255,255,0.08);border-radius:1px;display:flex;flex-direction:column-reverse;overflow:hidden;}
+.hud-fill{width:100%;background:var(--red);border-radius:1px;transition:height 0.15s;}
+.hud-pct{font-size:9px;color:rgba(255,255,255,0.3);font-family:'Space Mono',monospace;margin-top:4px;}
+
+/* MODAL */
+.modal-backdrop{position:fixed;inset:0;z-index:20000;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s;padding:20px;}
+.modal-backdrop.open{opacity:1;pointer-events:all;}
+.modal{background:var(--surface);border:1px solid rgba(255,255,255,0.1);border-radius:4px;padding:40px;max-width:500px;width:100%;transform:translateY(20px) scale(0.97);transition:transform 0.3s cubic-bezier(0.16,1,0.3,1);}
+.modal-backdrop.open .modal{transform:translateY(0) scale(1);}
+.modal-kicker{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:16px;font-family:'Space Mono',monospace;}
+.modal h3{font-family:'Playfair Display',serif;font-size:26px;margin-bottom:16px;}
+.modal p{font-size:12px;color:rgba(255,255,255,0.6);line-height:2;margin-bottom:20px;font-family:'Space Mono',monospace;}
+.modal-close{padding:10px 22px;background:transparent;border:1px solid rgba(255,255,255,0.15);border-radius:3px;color:rgba(255,255,255,0.5);font-size:10px;cursor:none;font-family:'Space Mono',monospace;letter-spacing:2px;text-transform:uppercase;transition:all 0.2s;}
+.modal-close:hover{border-color:rgba(255,255,255,0.4);color:#fff;}
+.classified-stamp{display:inline-block;border:2px solid var(--red);color:var(--red);font-size:11px;letter-spacing:3px;padding:4px 12px;text-transform:uppercase;font-family:'Space Mono',monospace;transform:rotate(-3deg);margin-bottom:20px;opacity:0;transition:opacity 0.1s;}
+.modal-backdrop.open .classified-stamp{opacity:1;animation:stamp-in 0.3s 0.2s cubic-bezier(0.34,1.56,0.64,1) both;}
+@keyframes stamp-in{from{transform:rotate(-3deg) scale(3);opacity:0}to{transform:rotate(-3deg) scale(1);opacity:1}}
+
+/* TOAST */
+#toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(10px);z-index:30000;background:var(--surface);border:1px solid rgba(255,255,255,0.1);border-radius:3px;padding:12px 24px;font-size:11px;color:rgba(255,255,255,0.7);opacity:0;transition:all 0.3s;pointer-events:none;white-space:nowrap;font-family:'Space Mono',monospace;letter-spacing:1px;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* WHO GRID */
+.who-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:32px;}
+.who-card{background:rgba(255,255,255,0.03);border:1px solid rgba(224,122,176,0.1);border-radius:4px;padding:18px 14px;cursor:none;transition:all 0.25s;}
+.who-card:hover{background:rgba(230,57,70,0.05);border-color:rgba(230,57,70,0.35);transform:translateY(-3px);box-shadow:0 0 0 1px rgba(230,57,70,0.12);}
+.who-role{font-size:9px;color:var(--pink);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;font-family:'Space Mono',monospace;}
+.who-desc{font-size:11px;color:rgba(255,255,255,0.45);line-height:1.7;font-family:'Space Mono',monospace;}
+
+/* THEORIES */
+.theory{border:1px solid rgba(255,255,255,0.07);border-radius:4px;padding:24px;margin-bottom:12px;text-align:left;cursor:none;transition:all 0.25s;position:relative;}
+.theory:hover{background:rgba(230,57,70,0.04);border-color:rgba(230,57,70,0.35);box-shadow:0 0 0 1px rgba(230,57,70,0.1);}
+.theory-num{font-size:9px;letter-spacing:2px;color:rgba(255,255,255,0.25);text-transform:uppercase;margin-bottom:10px;font-family:'Space Mono',monospace;}
+.theory-text{font-size:12px;color:rgba(255,255,255,0.6);line-height:1.9;font-family:'Space Mono',monospace;}
+
+/* ENDING */
+#ending-sec{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:100px 40px;background:#000;}
+.ending-quote{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(32px,5vw,52px);color:#fff;margin-bottom:32px;line-height:1.3;}
+.ending-body{font-size:12px;color:rgba(255,255,255,0.35);max-width:480px;margin:0 auto 32px;line-height:2;font-family:'Space Mono',monospace;}
+.ending-box{border:1px solid rgba(255,255,255,0.08);border-radius:4px;padding:28px;max-width:440px;margin:0 auto;}
+.ending-box p{font-size:11px;color:rgba(255,255,255,0.25);line-height:2;font-family:'Space Mono',monospace;}
+
+/* ABOUT PAGE */
+.inner-page{max-width:700px;margin:0 auto;padding:60px 40px;}
+.page-title{font-family:'Playfair Display',serif;font-size:42px;margin-bottom:6px;}
+.page-sub{font-size:9px;color:rgba(255,255,255,0.25);letter-spacing:3px;text-transform:uppercase;margin-bottom:48px;font-family:'Space Mono',monospace;}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:32px 0;}
+.stat-box{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:4px;padding:20px;text-align:center;}
+.stat-num{font-family:'Playfair Display',serif;font-size:30px;margin-bottom:4px;}
+.stat-label{font-size:9px;color:rgba(255,255,255,0.25);letter-spacing:2px;text-transform:uppercase;font-family:'Space Mono',monospace;}
+.about-block{margin-bottom:36px;padding-bottom:36px;border-bottom:1px solid var(--border);}
+.about-block:last-child{border-bottom:none;}
+.about-block h3{font-size:10px;color:var(--orange);letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;font-family:'Space Mono',monospace;}
+.about-block p{font-size:13px;color:rgba(255,255,255,0.55);line-height:2;font-family:'Space Mono',monospace;}
+
+/* TIMELINE */
+.timeline{position:relative;padding-left:40px;margin-top:40px;}
+.timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:rgba(255,255,255,0.08);}
+.tl-item{position:relative;margin-bottom:40px;opacity:0;transform:translateX(-20px);transition:all 0.6s cubic-bezier(0.16,1,0.3,1);}
+.tl-item.visible{opacity:1;transform:translateX(0);}
+.tl-dot{position:absolute;left:-44px;top:4px;width:8px;height:8px;border-radius:50%;background:var(--red);border:1px solid var(--red);}
+.tl-date{font-size:9px;color:var(--red);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;font-family:'Space Mono',monospace;}
+.tl-title{font-family:'Playfair Display',serif;font-size:18px;margin-bottom:8px;}
+.tl-body{font-size:12px;color:rgba(255,255,255,0.5);line-height:1.9;font-family:'Space Mono',monospace;}
+
+/* CASES */
+.case-card{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:4px;padding:24px;margin-bottom:12px;cursor:none;transition:all 0.2s;display:flex;gap:20px;}
+.case-card:hover{background:rgba(230,57,70,0.05);border-color:rgba(230,57,70,0.35);transform:translateX(4px);box-shadow:0 0 0 1px rgba(230,57,70,0.1);}
+.case-num{font-size:10px;color:rgba(255,255,255,0.15);letter-spacing:1px;min-width:32px;padding-top:2px;font-family:'Space Mono',monospace;}
+.case-title{font-family:'Playfair Display',serif;font-size:18px;margin-bottom:6px;}
+.case-body{font-size:11px;color:rgba(255,255,255,0.45);line-height:1.8;font-family:'Space Mono',monospace;}
+.case-badge{display:inline-block;padding:3px 10px;border-radius:2px;font-size:9px;margin-top:10px;letter-spacing:1px;font-family:'Space Mono',monospace;}
+
+/* QUIZ */
+.quiz-wrap{max-width:540px;margin:0 auto;}
+.quiz-q{font-family:'Playfair Display',serif;font-size:22px;margin-bottom:24px;line-height:1.4;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;margin-bottom:24px;}
+.quiz-opt{padding:14px 20px;border:1px solid rgba(255,255,255,0.1);border-radius:3px;cursor:none;font-size:12px;color:rgba(255,255,255,0.6);font-family:'Space Mono',monospace;transition:all 0.2s;text-align:left;background:transparent;}
+.quiz-opt:hover{border-color:rgba(255,255,255,0.3);color:#fff;background:rgba(255,255,255,0.04);}
+.quiz-opt.selected{border-color:var(--red);color:#fff;background:rgba(230,57,70,0.08);}
+.quiz-progress{display:flex;gap:6px;margin-bottom:32px;}
+.quiz-pip{height:2px;flex:1;background:rgba(255,255,255,0.1);border-radius:1px;transition:background 0.3s;}
+.quiz-pip.done{background:var(--red);}
+.quiz-next{padding:12px 28px;background:var(--red);border:none;border-radius:3px;color:#fff;font-size:10px;cursor:none;font-family:'Space Mono',monospace;letter-spacing:2px;text-transform:uppercase;transition:all 0.2s;opacity:0.4;pointer-events:none;}
+.quiz-next.active{opacity:1;pointer-events:all;}
+.quiz-next.active:hover{background:#c1121f;}
+.result-box{text-align:center;padding:40px;}
+.result-score{font-family:'Playfair Display',serif;font-size:72px;color:var(--red);margin-bottom:8px;}
+.result-label{font-size:10px;letter-spacing:3px;color:rgba(255,255,255,0.3);text-transform:uppercase;margin-bottom:24px;font-family:'Space Mono',monospace;}
+.result-desc{font-size:13px;color:rgba(255,255,255,0.55);line-height:2;font-family:'Space Mono',monospace;margin-bottom:24px;}
+.result-retry{padding:12px 28px;background:transparent;border:1px solid rgba(255,255,255,0.15);border-radius:3px;color:rgba(255,255,255,0.5);font-size:10px;cursor:none;font-family:'Space Mono',monospace;letter-spacing:2px;text-transform:uppercase;transition:all 0.2s;}
+.result-retry:hover{border-color:rgba(255,255,255,0.4);color:#fff;}
+
+/* SAFETY */
+.alert-banner{background:rgba(230,57,70,0.07);border:1px solid rgba(230,57,70,0.2);border-radius:4px;padding:28px;margin-bottom:28px;}
+.alert-banner h3{font-family:'Playfair Display',serif;font-size:22px;color:var(--red);margin-bottom:10px;}
+.alert-banner p{font-size:12px;color:rgba(255,255,255,0.55);line-height:2;font-family:'Space Mono',monospace;}
+.checklist-item{display:flex;gap:16px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,0.05);align-items:flex-start;}
+.check-circle{width:18px;height:18px;border-radius:50%;border:1px solid rgba(255,255,255,0.15);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;cursor:none;transition:all 0.2s;}
+.check-circle.checked{background:var(--teal);border-color:var(--teal);}
+.check-circle.checked::after{content:'✓';font-size:10px;color:#fff;}
+.checklist-item p{font-size:12px;color:rgba(255,255,255,0.5);line-height:1.8;font-family:'Space Mono',monospace;}
+
+/* SECTION BACKGROUNDS */
+.bg-green{background:linear-gradient(180deg,#04040a 0%,#050d07 50%,#04040a 100%);}
+.bg-orange{background:linear-gradient(180deg,#04040a 0%,#0d0804 50%,#04040a 100%);}
+.bg-blue{background:linear-gradient(180deg,#04040a 0%,#050610 50%,#04040a 100%);}
+.bg-pink{background:linear-gradient(180deg,#04040a 0%,#0d0508 50%,#04040a 100%);}
+.bg-dark{background:#060608;}
+
+/* SCROLL-DRIVEN: horizontal rule that grows */
+.grow-rule{width:0;height:1px;background:var(--red);margin:32px auto;transition:width 1.2s cubic-bezier(0.16,1,0.3,1);}
+.grow-rule.visible{width:120px;}
+
+/* MAP SECTION */
+.map-wrap{position:relative;width:100%;max-width:600px;margin:40px auto 0;}
+.map-svg{width:100%;height:auto;}
+.map-dot{animation:map-pulse 2s ease-in-out infinite;}
+@keyframes map-pulse{0%,100%{r:6;opacity:1}50%{r:10;opacity:0.5}}
+.map-line{stroke-dasharray:200;stroke-dashoffset:200;transition:stroke-dashoffset 2s ease 0.5s;}
+.map-line.visible{stroke-dashoffset:0;}
+</style>
+</head>
+<body>
+
+<div id="cursor-ring"></div>
+<div id="cursor">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <rect x="11" y="2" width="2" height="20" rx="1" fill="#e63946"/>
+    <rect x="2" y="11" width="20" height="2" rx="1" fill="#e63946"/>
+  </svg>
+</div>
+
+<div id="drain"></div>
+
+<div id="ticker">
+  <div class="ticker-label">OUTBREAK ALERT</div>
+  <div class="ticker-track" id="ticker-inner"></div>
+</div>
+
+<div id="vision-hud" class="hidden">
+  <div class="hud-label">Color Vision</div>
+  <div class="hud-track"><div class="hud-fill" id="hud-fill" style="height:100%"></div></div>
+  <div class="hud-pct" id="hud-pct">100%</div>
+</div>
+
+<nav>
+  <div class="nav-logo">Eye-bies</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('home')">Home</button>
+    <button class="nav-tab" onclick="showPage('about')">About</button>
+    <button class="nav-tab" onclick="showPage('timeline')">Timeline</button>
+    <button class="nav-tab" onclick="showPage('cases')">Case Files</button>
+    <button class="nav-tab" onclick="showPage('quiz')">Risk Quiz</button>
+    <button class="nav-tab" onclick="showPage('safety')">Safety</button>
+  </div>
+  <div class="nav-counter">
+    <div class="counter-dot"></div>
+    <span id="counter-num">12,847</span> infected
+  </div>
+</nav>
+
+<canvas id="particles-canvas" style="position:fixed;inset:0;pointer-events:none;z-index:50;"></canvas>
+
+<!-- HOME PAGE -->
+<div id="page-home" class="page active">
+
+  <div id="hero-wrap">
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+    <div style="position:relative;z-index:2;">
+      <div class="hero-eyeball">
+        <svg viewBox="0 0 140 86" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="70" cy="43" rx="66" ry="38" fill="none" stroke="#e63946" stroke-width="2"/>
+          <circle cx="70" cy="43" r="24" fill="#2a9d8f"/>
+          <circle cx="70" cy="43" r="14" fill="#04040a"/>
+          <circle cx="78" cy="36" r="5" fill="white" opacity="0.85"/>
+          <line x1="4" y1="43" x2="22" y2="43" stroke="#e63946" stroke-width="1.5"/>
+          <line x1="118" y1="43" x2="136" y2="43" stroke="#e63946" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="hero-kicker">Canine Achromatopsia-26</div>
+      <h1 class="hero-title"><span>Eye</span>-bies</h1>
+      <p class="hero-subtitle">A pandemic that asks whether humanity's love for dogs is worth losing the color of the world.</p>
+      <div class="hero-btns">
+        <button class="btn-red" onclick="showPage('about')">Learn the Science</button>
+        <button class="btn-ghost" onclick="openModal('survivor-modal')">Hear a Survivor</button>
+      </div>
+      <div class="scroll-hint">↓ scroll to lose your color vision ↓</div>
+    </div>
+  </div>
+
+  <section class="scroll-sec bg-green">
+    <div class="sec-inner">
+      <div class="reveal">
+        <span class="sec-tag" style="background:rgba(42,157,143,0.1);color:#2a9d8f;border:1px solid rgba(42,157,143,0.2);">The Ethical Crisis</span>
+        <h2 class="sec-h2" style="color:#2a9d8f;">Love at What Cost?</h2>
+        <div class="grow-rule" id="rule1"></div>
+        <p class="sec-p">As time spent near dogs increases, humans gradually lose their ability to perceive color. Yet faced with this knowledge, most refuse to give up their pets — tolerating personal harm and endangering those around them.</p>
+        <p class="sec-p">Eye-bies does not just steal your sight. It reveals where humanity's loyalties truly lie.</p>
+      </div>
+      <div class="cards-3">
+        <div class="card reveal reveal-delay-1" onclick="openModal('crisis1-modal')" style="border-color:rgba(42,157,143,0.15);">
+          <div class="card-title" style="color:#2a9d8f;">Pet Owners</div>
+          <div class="card-body">Most refuse treatment rather than surrender their dogs to quarantine.</div>
+          <div class="card-hint">tap to read →</div>
+        </div>
+        <div class="card reveal reveal-delay-2" onclick="openModal('crisis2-modal')" style="border-color:rgba(42,157,143,0.15);">
+          <div class="card-title" style="color:#2a9d8f;">Society</div>
+          <div class="card-body">Fractures between those who see dogs as family and those who see them as a threat.</div>
+          <div class="card-hint">tap to read →</div>
+        </div>
+        <div class="card reveal reveal-delay-3" onclick="openModal('crisis3-modal')" style="border-color:rgba(42,157,143,0.15);">
+          <div class="card-title" style="color:#2a9d8f;">No Consensus</div>
+          <div class="card-body">Governments, scientists, and activists cannot agree on a response.</div>
+          <div class="card-hint">tap to read →</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="scroll-sec bg-orange">
+    <div class="sec-inner">
+      <div class="reveal">
+        <span class="sec-tag" style="background:rgba(244,162,97,0.1);color:#f4a261;border:1px solid rgba(244,162,97,0.2);">Transmission</span>
+        <h2 class="sec-h2" style="color:#f4a261;">How It Spreads</h2>
+        <div class="grow-rule" id="rule2"></div>
+        <p class="sec-p">Three primary pathways have been identified from survivor accounts. The debate over which is correct has become as dangerous as the disease itself.</p>
+      </div>
+      <div class="cards-3">
+        <div class="card reveal reveal-delay-1" onclick="openModal('spread1-modal')" style="border-color:rgba(244,162,97,0.15);">
+          <div style="font-size:28px;margin-bottom:14px;">💧</div>
+          <div class="card-title" style="color:#f4a261;">Water Bowl</div>
+          <div class="card-body">Bacteria transferred through a dog licking near the owner's eyes.</div>
+          <div class="card-hint">tap for full account →</div>
+        </div>
+        <div class="card reveal reveal-delay-2" onclick="openModal('spread2-modal')" style="border-color:rgba(244,162,97,0.15);">
+          <div style="font-size:28px;margin-bottom:14px;">🤝</div>
+          <div class="card-title" style="color:#f4a261;">Contact</div>
+          <div class="card-body">Prolonged touch caused burning sensation until color vision ceased.</div>
+          <div class="card-hint">tap for full account →</div>
+        </div>
+        <div class="card reveal reveal-delay-3" onclick="openModal('spread3-modal')" style="border-color:rgba(244,162,97,0.15);">
+          <div style="font-size:28px;margin-bottom:14px;">🩺</div>
+          <div class="card-title" style="color:#f4a261;">Surgery</div>
+          <div class="card-body">Vets infected through organ contact — no protective gear worked.</div>
+          <div class="card-hint">tap for full account →</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="scroll-sec bg-blue">
+    <div class="sec-inner">
+      <div class="reveal">
+        <span class="sec-tag" style="background:rgba(123,140,222,0.1);color:#7b8cde;border:1px solid rgba(123,140,222,0.2);">The Island</span>
+        <h2 class="sec-h2" style="color:#7b8cde;">Origin & Escape</h2>
+        <div class="grow-rule" id="rule3"></div>
+        <p class="sec-p">On a remote island in the Atlantic, a silent mutation spread through the canine population. No visible symptoms — in the dogs or the humans who first encountered them.</p>
+        <p class="sec-p">When the outbreak was understood, the community made a devastating choice: abandon every dog and flee. But as the boats crossed the ocean, survivors realized — the disease had already crossed with them.</p>
+      </div>
+      <div class="map-wrap reveal">
+        <svg class="map-svg" viewBox="0 0 500 280" xmlns="http://www.w3.org/2000/svg">
+          <rect width="500" height="280" fill="none"/>
+          <text x="250" y="140" fill="rgba(255,255,255,0.04)" font-size="120" text-anchor="middle" dominant-baseline="middle" font-family="Georgia,serif">ATLANTIC</text>
+          <!-- North America on the LEFT -->
+          <path d="M 60 40 Q 100 60 110 100 Q 120 150 100 200 Q 80 240 50 260 L 40 200 Q 60 160 55 120 Q 50 80 40 60 Z" fill="rgba(123,140,222,0.08)" stroke="rgba(123,140,222,0.2)" stroke-width="1"/>
+          <text x="80" y="145" fill="rgba(255,255,255,0.35)" font-size="8" text-anchor="middle" font-family="Space Mono,monospace">NORTH</text>
+          <text x="80" y="157" fill="rgba(255,255,255,0.35)" font-size="8" text-anchor="middle" font-family="Space Mono,monospace">AMERICA</text>
+          <circle cx="80" cy="125" r="5" fill="#2a9d8f"/>
+          <!-- Island on the RIGHT (far Atlantic) -->
+          <ellipse cx="400" cy="180" rx="18" ry="12" fill="rgba(230,57,70,0.12)" stroke="#e63946" stroke-width="1"/>
+          <text x="400" y="202" fill="rgba(255,255,255,0.35)" font-size="8" text-anchor="middle" font-family="Space Mono,monospace">ORIGIN ISLAND</text>
+          <circle cx="400" cy="180" r="6" fill="#e63946" class="map-dot"/>
+          <!-- Path: island (right) → North America (left) -->
+          <path id="map-path" d="M 382 178 Q 240 120 98 127" fill="none" stroke="#e63946" stroke-width="1" stroke-dasharray="4 4" opacity="0.4" class="map-line"/>
+          <text x="240" y="112" fill="rgba(230,57,70,0.4)" font-size="8" text-anchor="middle" font-family="Space Mono,monospace">9 survivors</text>
+        </svg>
+      </div>
+      <div class="cards-2" style="margin-top:24px;">
+        <div class="card reveal" onclick="openModal('island1-modal')" style="border-color:rgba(123,140,222,0.15);">
+          <div class="card-title" style="color:#7b8cde;">The Abandonment</div>
+          <div class="card-body">The night the islanders left their dogs behind — and what it cost them.</div>
+          <div class="card-hint">read survivor account →</div>
+        </div>
+        <div class="card reveal" onclick="openModal('island2-modal')" style="border-color:rgba(123,140,222,0.15);">
+          <div class="card-title" style="color:#7b8cde;">The Crossing</div>
+          <div class="card-body">How only 9 of 140 survivors made it to North America.</div>
+          <div class="card-hint">read survivor account →</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="scroll-sec bg-pink">
+    <div class="sec-inner">
+      <div class="reveal">
+        <span class="sec-tag" style="background:rgba(224,122,176,0.1);color:#e07ab0;border:1px solid rgba(224,122,176,0.2);">Involved Parties</span>
+        <h2 class="sec-h2" style="color:#e07ab0;">Who Is Affected</h2>
+        <div class="grow-rule" id="rule4"></div>
+      </div>
+      <div class="who-grid">
+        <div class="who-card reveal reveal-delay-1" onclick="openModal('who1-modal')"><div class="who-role">Dogs</div><div class="who-desc">Unknowing carriers. Silent hosts of a world-altering mutation.</div></div>
+        <div class="who-card reveal reveal-delay-1" onclick="openModal('who2-modal')"><div class="who-role">Dog Owners</div><div class="who-desc">Caught between loyalty and self-preservation.</div></div>
+        <div class="who-card reveal reveal-delay-2" onclick="openModal('who3-modal')"><div class="who-role">Victims</div><div class="who-desc">Living in a gray world, searching for an antidote.</div></div>
+        <div class="who-card reveal reveal-delay-2" onclick="openModal('who4-modal')"><div class="who-role">Veterinarians</div><div class="who-desc">First responders with no protection that works.</div></div>
+        <div class="who-card reveal reveal-delay-3" onclick="openModal('who5-modal')"><div class="who-role">Activists</div><div class="who-desc">Fighting for dogs' rights as society turns hostile.</div></div>
+        <div class="who-card reveal reveal-delay-3" onclick="openModal('who6-modal')"><div class="who-role">Reporters</div><div class="who-desc">Spreading truth and panic in equal measure.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="scroll-sec bg-dark">
+    <div class="sec-inner">
+      <div class="reveal">
+        <span class="sec-tag" style="background:rgba(150,150,150,0.07);color:#888;border:1px solid rgba(150,150,150,0.15);">Competing Theories</span>
+        <h2 class="sec-h2" style="color:#bbb;">What People Believe</h2>
+        <div class="grow-rule" id="rule5" style="background:#888;"></div>
+        <p class="sec-p">Scientists have no confirmed cause. Into that vacuum, two dominant theories have bred — and the argument between them is as contagious as the disease.</p>
+      </div>
+      <div class="reveal" style="margin-top:32px;">
+        <div class="theory" onclick="openModal('theory1-modal')">
+          <div class="theory-num">Theory 01 — Saliva Mutation</div>
+          <div class="theory-text">The bacteria mutated specifically in dogs' saliva. Only direct oral contact near the eyes can transmit the disease. Casual proximity is safe.</div>
+        </div>
+        <div class="theory" onclick="openModal('theory2-modal')">
+          <div class="theory-num">Theory 02 — Full Contact Spread</div>
+          <div class="theory-text">Any bodily contact can transmit the bacteria. There is no safe distance. All physical contact with infected dogs is dangerous.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="ending-sec">
+    <div class="sec-inner reveal">
+      <div class="ending-quote">"Everything went gray."</div>
+      <p class="ending-body">This is what the survivors say. Not that they went blind. Not that they lost their sight. Just that one day, without warning — the color was gone.</p>
+      <div class="ending-box">
+        <p>Canine Achromatopsia-26 remains uncontained. An antidote has not been found. The island is quarantined. Scientists dispute the mechanism. The survivors are still gray.</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ABOUT PAGE -->
+<div id="page-about" class="page">
+  <div class="inner-page">
+    <h1 class="page-title">About Eye-bies</h1>
+    <div class="page-sub">Canine Achromatopsia-26 · Outbreak Profile</div>
+    <div class="stat-row">
+      <div class="stat-box"><div class="stat-num" style="color:var(--red);">CA-26</div><div class="stat-label">Pathogen Code</div></div>
+      <div class="stat-box"><div class="stat-num" style="color:var(--orange);">Present</div><div class="stat-label">Timeline</div></div>
+      <div class="stat-box"><div class="stat-num" style="color:var(--teal);">Atlantic</div><div class="stat-label">Origin Zone</div></div>
+    </div>
+    <div class="about-block">
+      <h3>What Is It</h3>
+      <p>Eye-bies is a fictional disease that creates a profound ethical dilemma: people must decide what kind of relationship they will have with dogs when that relationship costs them their ability to see color. Rooted in present-day tensions around pet ownership, public health, and animal rights.</p>
+    </div>
+    <div class="about-block">
+      <h3>The Condition</h3>
+      <p>Infected individuals progressively lose color vision — a condition called achromatopsia. Colors simply become less saturated over weeks, then months, until the world is entirely gray. There is no known reversal. No known cure.</p>
+    </div>
+    <div class="about-block">
+      <h3>Origin</h3>
+      <p>The disease emerged from a bacterial mutation in dogs on a remote Atlantic island. The mutation was invisible — no symptoms in the animals, no warning to the humans. By the time the first cases were understood, the infection had spread across the entire island community.</p>
+    </div>
+    <div class="about-block">
+      <h3>Current Status</h3>
+      <p>The island has been quarantined. Survivors who escaped to North America continue to tell their stories. Scientists disagree about the transmission mechanism. Activists and governments remain at odds. The antidote search is underfunded and ongoing.</p>
+    </div>
+  </div>
+</div>
+
+<!-- TIMELINE PAGE -->
+<div id="page-timeline" class="page">
+  <div class="inner-page">
+    <h1 class="page-title">Outbreak Timeline</h1>
+    <div class="page-sub">Day-by-Day Chronicle · Island to Mainland</div>
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">Day 0</div><div class="tl-title">Patient Zero</div><div class="tl-body">First human case identified on the island. A local dog owner reports unusual difficulty distinguishing red and green. Attributed to stress. No action taken.</div></div>
+      <div class="tl-item"><div class="tl-dot" style="background:#f4a261;border-color:#f4a261;"></div><div class="tl-date">Day 3</div><div class="tl-title">The First Veterinarian</div><div class="tl-body">Dr. M contracts Eye-bies after performing emergency surgery. Full PPE provides no protection. First clinical record of the disease's transmission through organ contact.</div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">Day 7</div><div class="tl-title">Community Outbreak</div><div class="tl-body">14 confirmed cases. Island health authority convenes emergency meeting. First quarantine proposals made. Dog owners protest outside the meeting hall.</div></div>
+      <div class="tl-item"><div class="tl-dot" style="background:#f4a261;border-color:#f4a261;"></div><div class="tl-date">Week 2</div><div class="tl-title">The Owner Who Refused</div><div class="tl-body">Health officials attempt to remove dogs from homes. One family barricades. The standoff becomes the defining image of the ethical crisis and goes viral on the mainland.</div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">Week 3</div><div class="tl-title">The Abandonment Decision</div><div class="tl-body">Island council votes to abandon all dogs and evacuate. 140 residents board boats. The night of departure is described by survivors as "the worst sound any of us ever heard."</div></div>
+      <div class="tl-item"><div class="tl-dot" style="background:#7b8cde;border-color:#7b8cde;"></div><div class="tl-date">Month 1</div><div class="tl-title">The Crossing Begins</div><div class="tl-body">At sea, survivors begin noticing color loss. Panic. Three people lost overboard in a storm. Food supply critically low. Survivors unsure if they are infecting each other.</div></div>
+      <div class="tl-item"><div class="tl-dot" style="background:#2a9d8f;border-color:#2a9d8f;"></div><div class="tl-date">Month 2</div><div class="tl-title">Landfall</div><div class="tl-body">9 survivors reach the North American coast. All are infected. All see in gray. Mainland authorities scramble to understand what they are dealing with. The story breaks globally.</div></div>
+      <div class="tl-item"><div class="tl-dot" style="background:#e07ab0;border-color:#e07ab0;"></div><div class="tl-date">Present</div><div class="tl-title">No Resolution</div><div class="tl-body">Island quarantined. Antidote search underfunded. Scientific community divided. The 9 survivors continue to give testimony. The world watches. The dogs on the island are alone.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- CASES PAGE -->
+<div id="page-cases" class="page">
+  <div class="inner-page">
+    <h1 class="page-title">Case Files</h1>
+    <div class="page-sub">Survivor Accounts · Classified Reports</div>
+    <div class="case-card" onclick="openModal('case1-modal')">
+      <div class="case-num">01</div>
+      <div>
+        <div class="case-title">The First Veterinarian</div>
+        <div class="case-body">Dr. M performed emergency surgery on an infected dog. Despite full protective equipment, she became the first medical professional to contract Eye-bies.</div>
+        <span class="case-badge" style="background:rgba(230,57,70,0.1);color:#e63946;border:1px solid rgba(230,57,70,0.2);">Day 3 of outbreak</span>
+      </div>
+    </div>
+    <div class="case-card" onclick="openModal('case2-modal')">
+      <div class="case-num">02</div>
+      <div>
+        <div class="case-title">The Owner Who Refused</div>
+        <div class="case-body">When officials came to remove dogs, one family barricaded their home. Their story became the defining image of the ethical crisis.</div>
+        <span class="case-badge" style="background:rgba(244,162,97,0.1);color:#f4a261;border:1px solid rgba(244,162,97,0.2);">Week 2 of outbreak</span>
+      </div>
+    </div>
+    <div class="case-card" onclick="openModal('case3-modal')">
+      <div class="case-num">03</div>
+      <div>
+        <div class="case-title">The Crossing</div>
+        <div class="case-body">Of the 140 islanders who fled by boat, only 9 reached the North American coast alive.</div>
+        <span class="case-badge" style="background:rgba(123,140,222,0.1);color:#7b8cde;border:1px solid rgba(123,140,222,0.2);">Month 1 · at sea</span>
+      </div>
+    </div>
+    <div class="case-card" onclick="openModal('case4-modal')">
+      <div class="case-num">04</div>
+      <div>
+        <div class="case-title">The Activist's Dilemma</div>
+        <div class="case-body">A prominent animal rights activist who spent 20 years defending dogs now defends the right to quarantine them.</div>
+        <span class="case-badge" style="background:rgba(42,157,143,0.1);color:#2a9d8f;border:1px solid rgba(42,157,143,0.2);">Present day</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ PAGE -->
+<div id="page-quiz" class="page">
+  <div class="inner-page" style="text-align:center;">
+    <h1 class="page-title">Risk Assessment</h1>
+    <div class="page-sub">How At Risk Are You? · 5 Questions</div>
+    <div class="quiz-wrap" id="quiz-container">
+      <div class="quiz-progress" id="quiz-progress"></div>
+      <div class="quiz-q" id="quiz-q"></div>
+      <div class="quiz-opts" id="quiz-opts"></div>
+      <button class="quiz-next" id="quiz-next" onclick="nextQ()">Next →</button>
+    </div>
+    <div id="quiz-result" style="display:none;">
+      <div class="result-box">
+        <div class="result-score" id="result-score"></div>
+        <div class="result-label">Risk Level</div>
+        <div class="result-desc" id="result-desc"></div>
+        <button class="result-retry" onclick="startQuiz()">Retake Assessment</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SAFETY PAGE -->
+<div id="page-safety" class="page">
+  <div class="inner-page">
+    <h1 class="page-title">Safety Protocol</h1>
+    <div class="page-sub">Public Health Advisory · North American Coast</div>
+    <div class="alert-banner">
+      <h3>Active Outbreak Warning</h3>
+      <p>Canine Achromatopsia-26 has been confirmed in survivors who reached the North American coastline. No confirmed local transmission yet. Remain alert. Report unusual color vision changes immediately.</p>
+    </div>
+    <p style="font-size:11px;color:rgba(255,255,255,0.3);margin-bottom:20px;font-family:'Space Mono',monospace;letter-spacing:1px;">CHECK OFF ACTIONS YOU HAVE TAKEN:</p>
+    <div id="checklist">
+      <div class="checklist-item"><div class="check-circle" onclick="toggleCheck(this)"></div><p>Avoid close facial contact with dogs until further guidance is issued</p></div>
+      <div class="checklist-item"><div class="check-circle" onclick="toggleCheck(this)"></div><p>Report any sudden changes in color perception to a medical professional</p></div>
+      <div class="checklist-item"><div class="check-circle" onclick="toggleCheck(this)"></div><p>Schedule a veterinary assessment for any behavioral changes in your pet</p></div>
+      <div class="checklist-item"><div class="check-circle" onclick="toggleCheck(this)"></div><p>Do not share water bowls or feeding equipment between pets and humans</p></div>
+      <div class="checklist-item"><div class="check-circle" onclick="toggleCheck(this)"></div><p>Follow local health authority guidelines regarding animal contact</p></div>
+      <div class="checklist-item"><div class="check-circle" onclick="toggleCheck(this)"></div><p>Share accurate information — do not spread unverified conspiracy theories</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ALL MODALS -->
+<div id="survivor-modal" class="modal-backdrop" onclick="closeOut(event,'survivor-modal')"><div class="modal"><div class="classified-stamp">Classified</div><div class="modal-kicker">Survivor Account</div><h3>"I noticed it on a Tuesday."</h3><p>"My dog Marco — he was licking my face, like always. I thought nothing of it. Two weeks later I reached for a red apple and saw gray. I told myself it was the lighting. Then it got worse. Then it was everything." — Island survivor, interviewed upon reaching the mainland</p><button class="modal-close" onclick="closeModal('survivor-modal')">Close</button></div></div>
+
+<div id="crisis1-modal" class="modal-backdrop" onclick="closeOut(event,'crisis1-modal')"><div class="modal"><div class="classified-stamp">Classified</div><div class="modal-kicker">Pet Owners</div><h3>Loyalty Over Sight</h3><p>Even after understanding the risk, the majority of dog owners chose to keep their animals rather than seek treatment. Many describe the choice as simple — "It's just color. My dog is my family." Public health officials have described this as the central obstacle to containment.</p><button class="modal-close" onclick="closeModal('crisis1-modal')">Close</button></div></div>
+
+<div id="crisis2-modal" class="modal-backdrop" onclick="closeOut(event,'crisis2-modal')"><div class="modal"><div class="classified-stamp">Classified</div><div class="modal-kicker">Society</div><h3>A Community Divided</h3><p>On the island, neighbors stopped speaking. Dog owners were shunned — or sheltered. Protests broke out over forced quarantine orders. The social fractures of Eye-bies mapped almost perfectly onto existing political divisions: individual rights versus collective safety.</p><button class="modal-close" onclick="closeModal('crisis2-modal')">Close</button></div></div>
+
+<div id="crisis3-modal" class="modal-backdrop" onclick="closeOut(event,'crisis3-modal')"><div class="modal"><div class="classified-stamp">Classified</div><div class="modal-kicker">No Consensus</div><h3>No Agreed Response</h3><p>Three separate international health bodies have issued conflicting recommendations. One calls for immediate culling of dogs in affected areas. Another argues for quarantine and testing. A third says the data is insufficient for any policy. Meanwhile, no antidote research is funded because no government can agree on the mechanism of spread.</p><button class="modal-close" onclick="closeModal('crisis3-modal')">Close</button></div></div>
+
+<div id="spread1-modal" class="modal-backdrop" onclick="closeOut(event,'spread1-modal')"><div class="modal"><div class="classified-stamp">Classified</div><div class="modal-kicker">Pathway 01</div><h3>The Water Bowl Pathway</h3><p>The leading hypothesis. Bacteria multiply in the water bowls of infected dogs. When a dog drinks, the bacteria colonize the saliva. Face licking — especially near the eyes — deposits the bacteria directly into one of the body's most vulnerable entry points. Infection follows within 10–14 days. Supported by 6 of the 9 surviving islanders.</p><button class="modal-close" onclick="closeModal('spread1-modal')">Close</button></div></div>
+
+<div id="spread2-modal" class="modal-backdrop" onclick="closeOut(event,'spread2-modal')"><div class="modal"><div class="classified-stamp">Classified</div><div class="modal-kicker">Pathway 02</div><h3>The Contact Pathway</h3><p>Two survivors described never allowing their dogs to lick their faces — yet still contracted Eye-bies. They report a burning sensation that began at their fingertips after prolonged petting and migrated toward the eyes over days. If confirmed, this would make the disease far more contagious than currently believed.</p><button class="modal-close" onclick="closeModal('spread2-modal')">Close</button></div></div>
+
+<div id="spread3-modal" class="modal-backdrop" onclick="closeOut(event,'spread3-modal')"><div class="modal"><div class="classified-stamp">Classified</div><div class="modal-kicker">Pathway 03</div><h3>The Surgical Pathway</h3><p>Every veterinarian on the island contracted Eye-bies. Full PPE — gloves, masks, goggles — provided no protection. Two vets who performed internal surgeries infected within 48 hours. The implication: the bacteria may pass through mucous membranes under surgical conditions, by a mechanism not yet understood.</p><button class="modal-close" onclick="closeModal('spread3-modal')">Close</button></div></div>
+
+<div id="island1-modal" class="modal-backdrop" onclick="closeOut(event,'island1-modal')"><div class="modal"><div class="classified-stamp">Classified</div><div class="modal-kicker">Survivor Account</div><h3>The Night of the Abandonment</h3><p>"They told us we had one hour. One hour to pack and leave. No dogs. That was the rule. I left my dog tied to the front gate with two days of food in a bowl. She was wagging her tail when I walked away. That image — her tail, still wagging — is the last color I can really remember." — Island survivor</p><button class="modal-close" onclick="closeModal('island1-modal')">Close</button></div></div>
+
+<div id="island2-modal" class="modal-backdrop" onclick="closeOut(event,'island2-modal')"><div class="modal"><div class="classified-stamp">Classified</div><div class="modal-kicker">Survivor Account</div><h3>The Crossing</h3><p>"By day four at sea, someone said the sky looked different. We all knew what that meant. Nobody said the word. By day twelve there were arguments — some people wanted to turn back for the dogs. Three people went overboard in a storm. We stopped counting the days. We just watched the water go gray." — Island survivor</p><button class="modal-close" onclick="closeModal('island2-modal')">Close</button></div></div>
+
+<div id="who1-modal" class="modal-backdrop" onclick="closeOut(event,'who1-modal')"><div class="modal"><div class="classified-stamp">Classified</div><div class="modal-kicker">The Dogs</div><h3>Unknowing Carriers</h3><p>The dogs show no symptoms. No behavioral changes. No physical signs. They remain affectionate, healthy, and — to their owners — completely normal. This is perhaps the cruelest aspect of Eye-bies: the source of the pandemic is also its most innocent victim.</p><button class="modal-close" onclick="closeModal('who1-modal')">Close</button></div></div>
+
+<div id="who2-modal" class="modal-backdrop" onclick="closeOut(event,'who2-modal')"><div class="modal"><div class="classified-stamp">Classified</div><div class="modal-kicker">Dog Owners</div><h3>Love and Risk</h3><p>Many infected individuals on the island knew the risk and continued daily contact with their dogs anyway. Public health officials have described this as irrational. Dog owners describe it as love. The debate over whether this choice should be legally restricted is ongoing.</p><button class="modal-close" onclick="closeModal('who2-modal')">Close</button></div></div>
+
+<div id="who3-modal" class="modal-backdrop" onclick="closeOut(event,'who3-modal')"><div class="modal"><div class="classified-stamp">Classified</div><div class="modal-kicker">Victims</div><h3>Life in Gray</h3><p>Those who have lost color vision describe the experience as disorienting but not debilitating. "The world still works. It's just flat," said one survivor. Others report severe depression, disconnection, grief. An antidote search is underway but underfunded. Victims are organizing to demand research money.</p><button class="modal-close" onclick="closeModal('who3-modal')">Close</button></div></div>
+
+<div id="who4-modal" class="modal-backdrop" onclick="closeOut(event,'who4-modal')"><div class="modal"><div class="classified-stamp">Classified</div><div class="modal-kicker">Veterinarians</div><h3>Unprotectable</h3><p>Every veterinarian on the island contracted Eye-bies. The profession is now grappling with an impossible situation: they are trained to help animals, but helping infected dogs puts them at guaranteed risk of infection. Several vet associations have issued guidance recommending full withdrawal of care from dogs in affected zones.</p><button class="modal-close" onclick="closeModal('who4-modal')">Close</button></div></div>
+
+<div id="who5-modal" class="modal-backdrop" onclick="closeOut(event,'who5-modal')"><div class="modal"><div class="classified-stamp">Classified</div><div class="modal-kicker">Activists</div><h3>A Movement Divided</h3><p>Animal rights activists are caught between their commitment to protecting dogs and the reality that dogs are the vector. Some are fighting to prevent culling. Others have split from their movements to support quarantine. The hashtag #SaveTheDogs and #SaveOurSight trend simultaneously — sometimes from the same accounts.</p><button class="modal-close" onclick="closeModal('who5-modal')">Close</button></div></div>
+
+<div id="who6-modal" class="modal-backdrop" onclick="closeOut(event,'who6-modal')"><div class="modal"><div class="classified-stamp">Classified</div><div class="modal-kicker">News Reporters</div><h3>Signal and Noise</h3><p>Media coverage has been polarized from the start. Some outlets run sympathetic dog-owner profiles. Others run fear-driven outbreak maps. Misinformation — including claims that the disease is airborne — has spread faster than accurate reporting. Three journalists covering the story have themselves contracted the disease.</p><button class="modal-close" onclick="closeModal('who6-modal')">Close</button></div></div>
+
+<div id="theory1-modal" class="modal-backdrop" onclick="closeOut(event,'theory1-modal')"><div class="modal"><div class="classified-stamp">Unverified</div><div class="modal-kicker">Theory 01</div><h3>The Saliva Theory</h3><p>Supported by 6 of 9 survivors. Proponents argue the bacteria are fragile outside the oral environment and cannot survive transmission through skin. If true, casual proximity to dogs is safe — only direct oral-to-facial contact carries risk. This would significantly narrow the scope of required quarantine measures.</p><button class="modal-close" onclick="closeModal('theory1-modal')">Close</button></div></div>
+
+<div id="theory2-modal" class="modal-backdrop" onclick="closeOut(event,'theory2-modal')"><div class="modal"><div class="classified-stamp">Unverified</div><div class="modal-kicker">Theory 02</div><h3>The Full Contact Theory</h3><p>Supported by 2 of 9 survivors — but those 2 cases are unexplained by Theory 01. Proponents argue the bacteria can penetrate through skin, particularly in areas of high nerve density. If true, any physical contact with an infected dog is dangerous — making Eye-bies one of the most contagious diseases ever recorded.</p><button class="modal-close" onclick="closeModal('theory2-modal')">Close</button></div></div>
+
+<div id="case1-modal" class="modal-backdrop" onclick="closeOut(event,'case1-modal')"><div class="modal"><div class="classified-stamp">Classified</div><div class="modal-kicker">Case File 01</div><h3>The First Veterinarian</h3><p>"I was wearing everything. Double gloves. Goggles. Face shield. Full gown. I don't know when it happened. Maybe it was the organ exposure during the splenectomy. Maybe it was earlier. By the time I noticed the grays, I had already treated 14 other animals. I followed every protocol. It didn't matter." — Dr. M., Day 3 account</p><button class="modal-close" onclick="closeModal('case1-modal')">Close</button></div></div>
+
+<div id="case2-modal" class="modal-backdrop" onclick="closeOut(event,'case2-modal')"><div class="modal"><div class="classified-stamp">Classified</div><div class="modal-kicker">Case File 02</div><h3>The Owner Who Refused</h3><p>"They came to our door at 6am. Three officers and a health official. I told them: if you take my dog, you'll have to take me too. They left. They came back two days later with more people. By then both my wife and I had already lost the reds and greens. We still refused. I don't regret it." — Island resident, Week 2</p><button class="modal-close" onclick="closeModal('case2-modal')">Close</button></div></div>
+
+<div id="case3-modal" class="modal-backdrop" onclick="closeOut(event,'case3-modal')"><div class="modal"><div class="classified-stamp">Classified</div><div class="modal-kicker">Case File 03</div><h3>The Crossing</h3><p>"We started with 140. By the end of week one at sea, 30 people were too weak to stand. The hardest part wasn't the hunger or the waves. It was watching the sunsets go gray. Every day a little less color. By the time we saw the coastline, I couldn't tell if the lights were red or white. We were 9." — Survivor #4</p><button class="modal-close" onclick="closeModal('case3-modal')">Close</button></div></div>
+
+<div id="case4-modal" class="modal-backdrop" onclick="closeOut(event,'case4-modal')"><div class="modal"><div class="classified-stamp">Classified</div><div class="modal-kicker">Case File 04</div><h3>The Activist's Dilemma</h3><p>"I spent 20 years arguing that dogs are not property. That they feel. That they deserve protection. And now I'm standing here telling you we need to quarantine them. I haven't changed my mind about who they are. I've just had to accept what they carry. That difference — it matters to me, even if nobody else sees it." — Animal rights activist</p><button class="modal-close" onclick="closeModal('case4-modal')">Close</button></div></div>
+
+<div id="toast"></div>
+
+<script>
+// CUSTOM CURSOR
+const cursor = document.getElementById('cursor');
+const cursorRing = document.getElementById('cursor-ring');
+let mx=window.innerWidth/2, my=window.innerHeight/2;
+document.addEventListener('mousemove', e => {
+  mx=e.clientX; my=e.clientY;
+  cursor.style.left=mx+'px'; cursor.style.top=my+'px';
+  cursorRing.style.left=mx+'px'; cursorRing.style.top=my+'px';
+  const el = document.elementFromPoint(mx, my);
+  const hoverable = el && el.closest('.card,.who-card,.theory,.case-card,.quiz-opt,.btn-red,.btn-ghost,.nav-tab,.modal-close,.result-retry,.check-circle,.classified-stamp');
+  cursor.classList.toggle('hovering', !!hoverable);
+  cursorRing.classList.toggle('hovering', !!hoverable);
+});
+document.addEventListener('mousedown',()=>cursor.classList.add('clicking'));
+document.addEventListener('mouseup',()=>cursor.classList.remove('clicking'));
+
+// TICKER
+const headlines = [
+  'BREAKING: Eye-bies survivor count reaches 9 on North American coast',
+  'Scientists divided on transmission mechanism of Canine Achromatopsia-26',
+  'Island formally quarantined — no entry or exit permitted',
+  'Activist groups clash over dog culling proposal in affected zones',
+  'Veterinarians union calls for full withdrawal from infected animal care',
+  'CONFIRMED: No protective equipment has proven effective against CA-26',
+  'Dog ownership down 34% in coastal communities amid outbreak fears',
+  'Researchers warn antidote timeline could be years away without more funding',
+];
+const tickerEl = document.getElementById('ticker-inner');
+const fullText = headlines.concat(headlines).map(h=>`<span>${h}</span>`).join('');
+tickerEl.innerHTML = fullText + fullText;
+
+// INFECTION COUNTER
+let count = 12847;
+setInterval(()=>{
+  count += Math.floor(Math.random()*3);
+  document.getElementById('counter-num').textContent = count.toLocaleString();
+},2800);
+
+// PARTICLES
+const canvas = document.getElementById('particles-canvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
+const particles = [];
+for(let i=0;i<30;i++){
+  particles.push({
+    x:Math.random()*window.innerWidth,
+    y:Math.random()*window.innerHeight+window.innerHeight,
+    r:Math.random()*3+1,
+    speed:Math.random()*0.4+0.1,
+    opacity:Math.random()*0.3+0.05,
+    hue:Math.random()<0.5?0:0,
+    color:Math.random()<0.6?`rgba(230,57,70,${Math.random()*0.15+0.03})`:`rgba(255,255,255,${Math.random()*0.06+0.02})`
+  });
+}
+function animParticles(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{
+    p.y -= p.speed;
+    if(p.y < -10){p.y=canvas.height+10;p.x=Math.random()*canvas.width;}
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=p.color;
+    ctx.fill();
+  });
+  requestAnimationFrame(animParticles);
+}
+animParticles();
+
+// COLOR DRAIN + SCROLL
+const drain = document.getElementById('drain');
+const hudFill = document.getElementById('hud-fill');
+const hudPct = document.getElementById('hud-pct');
+const visionHud = document.getElementById('vision-hud');
+
+window.addEventListener('scroll',()=>{
+  if(!document.getElementById('page-home').classList.contains('active')) return;
+  const home = document.getElementById('page-home');
+  const prog = Math.min(window.scrollY/(home.scrollHeight-window.innerHeight),1);
+  const start = 0.2;
+  const dp = prog < start ? 0 : (prog-start)/(1-start);
+  drain.style.opacity = dp*0.96;
+  const v = Math.max(0,Math.round((1-dp)*100));
+  hudFill.style.height = v+'%';
+  hudPct.textContent = v+'%';
+  checkReveals();
+  checkMapLine();
+  checkGrowRules();
+  checkTimeline();
+},{passive:true});
+
+function checkReveals(){
+  document.querySelectorAll('.reveal').forEach(el=>{
+    if(el.getBoundingClientRect().top < window.innerHeight*0.88) el.classList.add('visible');
+  });
+}
+function checkGrowRules(){
+  document.querySelectorAll('.grow-rule').forEach(el=>{
+    if(el.getBoundingClientRect().top < window.innerHeight*0.85) el.classList.add('visible');
+  });
+}
+function checkMapLine(){
+  const line = document.querySelector('.map-line');
+  if(!line) return;
+  if(line.getBoundingClientRect().top < window.innerHeight*0.9) line.classList.add('visible');
+}
+function checkTimeline(){
+  document.querySelectorAll('.tl-item').forEach((el,i)=>{
+    if(el.getBoundingClientRect().top < window.innerHeight*0.85){
+      setTimeout(()=>el.classList.add('visible'),i*80);
+    }
+  });
+}
+
+// PAGE SWITCHING
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  const tabs=['home','about','timeline','cases','quiz','safety'];
+  const btn = document.querySelectorAll('.nav-tab')[tabs.indexOf(id)];
+  if(btn) btn.classList.add('active');
+  window.scrollTo(0,0);
+  visionHud.classList.toggle('hidden', id !== 'home');
+  if(id!=='home') drain.style.opacity=0;
+  if(id==='quiz') startQuiz();
+  setTimeout(()=>{checkReveals();checkGrowRules();checkTimeline();},100);
+}
+
+// MODALS
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+function closeOut(e,id){if(e.target===document.getElementById(id))closeModal(id);}
+
+// TOAST
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2400);
+}
+
+// CHECKLIST
+function toggleCheck(el){
+  el.classList.toggle('checked');
+  if(el.classList.contains('checked')) showToast('Safety step logged');
+}
+
+// QUIZ
+const questions=[
+  {q:"How often do you allow your dog to lick your face?",opts:["Never","Occasionally","Daily","Multiple times a day"],scores:[0,1,3,5]},
+  {q:"How many hours per day do you spend in physical contact with your dog?",opts:["Less than 1 hour","1–3 hours","3–6 hours","More than 6 hours"],scores:[0,1,3,5]},
+  {q:"Have you ever performed or assisted in veterinary care for your dog?",opts:["No","Once or twice","Several times","I am a veterinarian"],scores:[0,1,3,5]},
+  {q:"Do you share your bed or sleeping space with your dog?",opts:["Never","Sometimes","Most nights","Every night, we're inseparable"],scores:[0,1,3,5]},
+  {q:"If you were diagnosed with Eye-bies, would you give up your dog?",opts:["Yes, immediately","Probably yes","Probably not","Absolutely not"],scores:[0,1,3,5]},
+];
+let qIdx=0, totalScore=0, answered=false;
+
+function startQuiz(){
+  qIdx=0; totalScore=0; answered=false;
+  document.getElementById('quiz-container').style.display='block';
+  document.getElementById('quiz-result').style.display='none';
+  renderQ();
+}
+
+function renderQ(){
+  answered=false;
+  const q=questions[qIdx];
+  document.getElementById('quiz-q').textContent=q.q;
+  const pips=document.getElementById('quiz-progress');
+  pips.innerHTML=questions.map((_,i)=>`<div class="quiz-pip${i<qIdx?' done':''}"></div>`).join('');
+  const opts=document.getElementById('quiz-opts');
+  opts.innerHTML=q.opts.map((o,i)=>`<button class="quiz-opt" onclick="selectOpt(this,${i})">${o}</button>`).join('');
+  const nextBtn=document.getElementById('quiz-next');
+  nextBtn.classList.remove('active');
+  nextBtn.textContent=qIdx<questions.length-1?'Next →':'See Results →';
+}
+
+function selectOpt(el,i){
+  document.querySelectorAll('.quiz-opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+  el.dataset.score=questions[qIdx].scores[i];
+  document.getElementById('quiz-next').classList.add('active');
+}
+
+function nextQ(){
+  const sel=document.querySelector('.quiz-opt.selected');
+  if(!sel) return;
+  totalScore+=parseInt(sel.dataset.score);
+  qIdx++;
+  if(qIdx>=questions.length){showResult();}else{renderQ();}
+}
+
+function showResult(){
+  document.getElementById('quiz-container').style.display='none';
+  document.getElementById('quiz-result').style.display='block';
+  const max=25;
+  const pct=Math.round((totalScore/max)*100);
+  let label,desc;
+  if(pct<25){label='Low Risk';desc='Your habits suggest minimal exposure risk. You maintain healthy boundaries with animals. Continue following public health guidelines and monitor for any changes in color perception.';}
+  else if(pct<50){label='Moderate Risk';desc='Your daily habits create some exposure risk. Consider reducing close facial contact with your dog and consult a physician if you notice any changes in color vision.';}
+  else if(pct<75){label='High Risk';desc='Your level of dog contact places you in a high-risk category. You are advised to seek immediate assessment from a public health professional and reduce physical contact with your pet.';}
+  else{label='Critical Risk';desc='Your attachment to and contact with your dog places you at critical risk. You may already be in early stages of infection. Seek medical assessment immediately and prepare for difficult decisions.';}
+  document.getElementById('result-score').textContent=label;
+  document.getElementById('result-desc').textContent=desc;
+}
+
+// INIT
+visionHud.classList.remove('hidden');
+setTimeout(()=>{checkReveals();checkGrowRules();},200);
+</script>
+</body>
+</html>
