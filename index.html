@@ -14,6 +14,27 @@
 html{scroll-behavior:smooth;}
 body{background:var(--bg);font-family:'Space Mono',monospace;color:#fff;overflow-x:hidden;cursor:none;}
 
+/* SUBTLE BACKGROUND TEXTURE */
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='4' height='4' fill='none'/%3E%3Ccircle cx='1' cy='1' r='0.5' fill='rgba(255,255,255,0.015)'/%3E%3C/svg%3E");
+  background-size:4px 4px;}
+
+/* LEFT SIDE PANEL */
+#side-left{position:fixed;left:0;top:76px;bottom:0;width:160px;z-index:200;pointer-events:none;display:flex;flex-direction:column;align-items:center;padding:40px 12px;gap:20px;overflow:hidden;border-right:1px solid rgba(255,255,255,0.04);background:linear-gradient(to right,rgba(230,57,70,0.03),transparent);}
+.side-text{font-size:8px;letter-spacing:2px;color:rgba(230,57,70,0.35);font-family:'Space Mono',monospace;text-transform:uppercase;writing-mode:vertical-rl;white-space:nowrap;line-height:1;}
+.side-line{width:1px;height:48px;background:rgba(230,57,70,0.1);margin:4px 0;}
+.side-dot{width:5px;height:5px;border-radius:50%;background:rgba(230,57,70,0.4);margin:2px 0;animation:side-blink 3s ease-in-out infinite;}
+@keyframes side-blink{0%,100%{opacity:0.3}50%{opacity:1}}
+.side-warning{font-size:7px;letter-spacing:2px;color:rgba(230,57,70,0.25);font-family:'Space Mono',monospace;text-transform:uppercase;writing-mode:vertical-rl;white-space:nowrap;border:1px solid rgba(230,57,70,0.12);padding:8px 4px;border-radius:2px;}
+.side-stat{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.side-stat-num{font-family:'Playfair Display',serif;font-size:18px;color:rgba(230,57,70,0.4);line-height:1;}
+.side-stat-label{font-size:6px;letter-spacing:2px;color:rgba(255,255,255,0.15);font-family:'Space Mono',monospace;text-transform:uppercase;}
+
+/* RIGHT SIDE PANEL */
+#side-right{position:fixed;right:0;top:76px;bottom:0;width:160px;z-index:200;pointer-events:none;display:flex;flex-direction:column;align-items:center;padding:40px 12px;gap:20px;overflow:hidden;border-left:1px solid rgba(255,255,255,0.04);background:linear-gradient(to left,rgba(230,57,70,0.03),transparent);}
+.side-code{font-size:7px;letter-spacing:2px;color:rgba(255,255,255,0.12);font-family:'Space Mono',monospace;writing-mode:vertical-rl;white-space:nowrap;animation:flicker 8s ease-in-out infinite;}
+@keyframes flicker{0%,90%,100%{opacity:1}92%{opacity:0.2}95%{opacity:1}97%{opacity:0.1}}
+
 /* CUSTOM CURSOR */
 #cursor{position:fixed;width:20px;height:20px;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:transform 0.06s ease;}
 #cursor svg{width:100%;height:100%;}
@@ -232,6 +253,46 @@ nav{position:fixed;top:28px;left:0;right:0;z-index:7000;padding:0 40px;height:48
     <rect x="11" y="2" width="2" height="20" rx="1" fill="#e63946"/>
     <rect x="2" y="11" width="20" height="2" rx="1" fill="#e63946"/>
   </svg>
+</div>
+
+<div id="side-left">
+  <div class="side-stat"><div class="side-stat-num" id="left-counter">12,847</div><div class="side-stat-label">Infected</div></div>
+  <div class="side-line"></div>
+  <div class="side-warning">⚠ Quarantine Zone</div>
+  <div class="side-line"></div>
+  <div class="side-text">CA-26 ACTIVE</div>
+  <div class="side-dot" style="animation-delay:0s"></div>
+  <div class="side-line"></div>
+  <div class="side-stat"><div class="side-stat-num" style="color:rgba(255,255,255,0.2);">9</div><div class="side-stat-label">Survivors</div></div>
+  <div class="side-line"></div>
+  <div class="side-text">NO CURE FOUND</div>
+  <div class="side-dot" style="animation-delay:1s"></div>
+  <div class="side-line"></div>
+  <div class="side-warning">ISLAND SEALED</div>
+  <div class="side-line"></div>
+  <div class="side-stat"><div class="side-stat-num" style="color:rgba(42,157,143,0.5);">0</div><div class="side-stat-label">Antidotes</div></div>
+  <div class="side-line"></div>
+  <div class="side-dot" style="animation-delay:2s"></div>
+  <div class="side-text">ALERT LEVEL: RED</div>
+</div>
+
+<div id="side-right">
+  <div class="side-stat"><div class="side-stat-num" style="color:rgba(244,162,97,0.4);">∞</div><div class="side-stat-label">Days Since Cure</div></div>
+  <div class="side-line"></div>
+  <div class="side-code" style="animation-delay:0s;color:rgba(230,57,70,0.3);">STATUS: UNCONTAINED</div>
+  <div class="side-dot" style="animation-delay:0.5s;background:rgba(255,255,255,0.15);"></div>
+  <div class="side-line"></div>
+  <div class="side-warning" style="color:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.08);">CLASSIFIED</div>
+  <div class="side-line"></div>
+  <div class="side-stat"><div class="side-stat-num" style="color:rgba(123,140,222,0.4);">140</div><div class="side-stat-label">Evacuated</div></div>
+  <div class="side-dot" style="animation-delay:1.5s;background:rgba(255,255,255,0.15);"></div>
+  <div class="side-line"></div>
+  <div class="side-code" style="animation-delay:3s;color:rgba(255,255,255,0.1);">ANTIDOTE: UNKNOWN</div>
+  <div class="side-line"></div>
+  <div class="side-warning" style="color:rgba(230,57,70,0.2);border-color:rgba(230,57,70,0.08);">DO NOT SHARE</div>
+  <div class="side-line"></div>
+  <div class="side-dot" style="animation-delay:2.5s;background:rgba(255,255,255,0.15);"></div>
+  <div class="side-code" style="animation-delay:5s;color:rgba(255,255,255,0.08);">EYE-BIES · 2026</div>
 </div>
 
 <div id="drain"></div>
@@ -751,6 +812,8 @@ let count = 12847;
 setInterval(()=>{
   count += Math.floor(Math.random()*3);
   document.getElementById('counter-num').textContent = count.toLocaleString();
+  const lc = document.getElementById('left-counter');
+  if(lc) lc.textContent = count.toLocaleString();
 },2800);
 
 // PARTICLES
