@@ -317,7 +317,7 @@ nav{position:fixed;top:28px;left:0;right:0;z-index:7000;padding:0 40px;height:48
     <button class="nav-tab" onclick="showPage('cases')">Case Files</button>
     <button class="nav-tab" onclick="showPage('quiz')">Risk Quiz</button>
     <button class="nav-tab" onclick="showPage('safety')">Safety</button>
-    <button class="nav-tab" onclick="showPage('press')">Press</button>
+    <button class="nav-tab" onclick="showPage('press')">Media</button>
   </div>
   <div class="nav-counter">
     <div class="counter-dot"></div>
@@ -692,10 +692,10 @@ nav{position:fixed;top:28px;left:0;right:0;z-index:7000;padding:0 40px;height:48
 <!-- PRESS PAGE -->
 <div id="page-press" class="page">
   <div class="inner-page">
-    <h1 class="page-title">Press</h1>
-    <div class="page-sub">Original Documents · Click to Open</div>
+    <h1 class="page-title">Media</h1>
+    <div class="page-sub">Press · Documents · Video Coverage</div>
 
-    <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin-top:16px;">
+    <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin-top:16px;max-width:600px;margin-left:auto;margin-right:auto;">
 
       <div onclick="openPDF('https://akshatarora10.github.io/pandemic-project/News.pdf','Breaking News')" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:32px;cursor:none;transition:all 0.25s;text-align:center;" onmouseenter="this.style.borderColor='rgba(230,57,70,0.4)';this.style.background='rgba(230,57,70,0.05)';this.style.transform='translateY(-4px)'" onmouseleave="this.style.borderColor='rgba(255,255,255,0.08)';this.style.background='rgba(255,255,255,0.02)';this.style.transform='translateY(0)'">
         <div style="width:56px;height:72px;background:rgba(230,57,70,0.1);border:1px solid rgba(230,57,70,0.2);border-radius:4px;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;position:relative;">
@@ -717,7 +717,36 @@ nav{position:fixed;top:28px;left:0;right:0;z-index:7000;padding:0 40px;height:48
         <div style="font-size:9px;color:#e8c96d;letter-spacing:2px;font-family:'Space Mono',monospace;text-transform:uppercase;">Click to Open →</div>
       </div>
 
+      <a href="https://youtube.com/shorts/jMp37KDHhwQ?feature=share" target="_blank" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:32px;cursor:none;transition:all 0.25s;text-align:center;text-decoration:none;display:block;" onmouseenter="this.style.borderColor='rgba(42,157,143,0.4)';this.style.background='rgba(42,157,143,0.05)';this.style.transform='translateY(-4px)'" onmouseleave="this.style.borderColor='rgba(255,255,255,0.08)';this.style.background='rgba(255,255,255,0.02)';this.style.transform='translateY(0)'">
+        <div style="width:56px;height:56px;background:rgba(42,157,143,0.1);border:1px solid rgba(42,157,143,0.2);border-radius:50%;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;">
+          <div style="width:0;height:0;border-top:10px solid transparent;border-bottom:10px solid transparent;border-left:16px solid rgba(42,157,143,0.8);margin-left:4px;"></div>
+        </div>
+        <div style="font-family:'Playfair Display',serif;font-size:18px;margin-bottom:8px;color:#fff;">Social Media Buzz</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.3);font-family:'Space Mono',monospace;letter-spacing:1px;margin-bottom:16px;">Eye-bies · Going Viral</div>
+        <div style="font-size:9px;color:#2a9d8f;letter-spacing:2px;font-family:'Space Mono',monospace;text-transform:uppercase;">Watch on YouTube →</div>
+      </a>
+
+      <div onclick="openImg('https://akshatarora10.github.io/pandemic-project/Beast.png')" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:32px;cursor:none;transition:all 0.25s;text-align:center;" onmouseenter="this.style.borderColor='rgba(244,162,97,0.4)';this.style.background='rgba(244,162,97,0.05)';this.style.transform='translateY(-4px)'" onmouseleave="this.style.borderColor='rgba(255,255,255,0.08)';this.style.background='rgba(255,255,255,0.02)';this.style.transform='translateY(0)'">
+        <div style="width:56px;height:56px;background:rgba(244,162,97,0.1);border:1px solid rgba(244,162,97,0.2);border-radius:4px;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="18" height="18" rx="2" stroke="rgba(244,162,97,0.7)" stroke-width="1.5"/><circle cx="8.5" cy="8.5" r="1.5" fill="rgba(244,162,97,0.7)"/><path d="M3 15l5-5 4 4 3-3 6 6" stroke="rgba(244,162,97,0.7)" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div style="font-family:'Playfair Display',serif;font-size:18px;margin-bottom:8px;color:#fff;">Text Messages</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.3);font-family:'Space Mono',monospace;letter-spacing:1px;margin-bottom:16px;">Chilling Messages · Leaked</div>
+        <div style="font-size:9px;color:#f4a261;letter-spacing:2px;font-family:'Space Mono',monospace;text-transform:uppercase;">Click to View →</div>
+      </div>
+
     </div>
+  </div>
+</div>
+
+<!-- IMAGE FULLSCREEN VIEWER -->
+<div id="img-viewer" style="display:none;position:fixed;inset:0;z-index:50001;background:rgba(0,0,0,0.96);flex-direction:column;" onclick="closeImg()">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid rgba(255,255,255,0.08);">
+    <div style="font-size:11px;color:rgba(255,255,255,0.4);font-family:'Space Mono',monospace;letter-spacing:1px;">Text Messages · Click anywhere to close</div>
+    <button onclick="closeImg()" style="padding:8px 20px;background:transparent;border:1px solid rgba(255,255,255,0.15);border-radius:3px;color:rgba(255,255,255,0.5);font-size:10px;cursor:none;font-family:'Space Mono',monospace;letter-spacing:2px;text-transform:uppercase;">✕ Close</button>
+  </div>
+  <div style="flex:1;overflow-y:auto;display:flex;align-items:flex-start;justify-content:center;padding:24px;">
+    <img id="img-frame" src="" style="max-width:100%;height:auto;border-radius:8px;" onclick="event.stopPropagation()"/>
   </div>
 </div>
 
@@ -906,6 +935,19 @@ function showPage(id){
   if(id!=='home') drain.style.opacity=0;
   if(id==='quiz') startQuiz();
   setTimeout(()=>{checkReveals();checkGrowRules();checkTimeline();},100);
+}
+
+// IMAGE VIEWER
+function openImg(src){
+  const viewer = document.getElementById('img-viewer');
+  document.getElementById('img-frame').src = src;
+  viewer.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+function closeImg(){
+  document.getElementById('img-viewer').style.display = 'none';
+  document.getElementById('img-frame').src = '';
+  document.body.style.overflow = '';
 }
 
 // PDF VIEWER
