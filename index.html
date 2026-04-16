@@ -30,6 +30,16 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;
 .side-stat-num{font-family:'Playfair Display',serif;font-size:18px;color:rgba(230,57,70,0.4);line-height:1;}
 .side-stat-label{font-size:6px;letter-spacing:2px;color:rgba(255,255,255,0.15);font-family:'Space Mono',monospace;text-transform:uppercase;}
 
+/* FAQ */
+.faq-item{border-bottom:1px solid rgba(255,255,255,0.06);cursor:none;transition:all 0.2s;}
+.faq-item:first-child{border-top:1px solid rgba(255,255,255,0.06);}
+.faq-q{display:flex;align-items:center;justify-content:space-between;padding:20px 0;font-family:'Playfair Display',serif;font-size:18px;color:#fff;gap:16px;}
+.faq-q:hover{color:var(--red);}
+.faq-arrow{font-size:20px;color:var(--red);transition:transform 0.3s;flex-shrink:0;font-family:'Space Mono',monospace;}
+.faq-item.open .faq-arrow{transform:rotate(45deg);}
+.faq-a{font-size:12px;color:rgba(255,255,255,0.55);line-height:2;font-family:'Space Mono',monospace;max-height:0;overflow:hidden;transition:max-height 0.4s cubic-bezier(0.16,1,0.3,1),padding 0.3s;}
+.faq-item.open .faq-a{max-height:300px;padding-bottom:20px;}
+
 /* RIGHT SIDE PANEL */
 #side-right{position:fixed;right:0;top:76px;bottom:0;width:160px;z-index:200;pointer-events:none;display:flex;flex-direction:column;align-items:center;padding:40px 12px;gap:20px;overflow:hidden;border-left:1px solid rgba(255,255,255,0.04);background:linear-gradient(to left,rgba(230,57,70,0.03),transparent);}
 .side-code{font-size:7px;letter-spacing:2px;color:rgba(255,255,255,0.12);font-family:'Space Mono',monospace;writing-mode:vertical-rl;white-space:nowrap;animation:flicker 8s ease-in-out infinite;}
@@ -328,6 +338,7 @@ nav{position:fixed;top:28px;left:0;right:0;z-index:7000;padding:0 40px;height:48
     <button class="nav-tab" onclick="showPage('safety')">Safety</button>
     <button class="nav-tab" onclick="showPage('press')">Media</button>
     <button class="nav-tab" onclick="showPage('refs')">References</button>
+    <button class="nav-tab" onclick="showPage('faq')">FAQ</button>
   </div>
   <div class="nav-counter">
     <div class="counter-dot"></div>
@@ -814,6 +825,64 @@ nav{position:fixed;top:28px;left:0;right:0;z-index:7000;padding:0 40px;height:48
       <p>Eye-bies engages with scapegoating through the targeting of dogs as the source of societal collapse. Conflicting narratives emerge between scientists, activists, and survivors — each offering a different account of how the disease spreads and what should be done. The government's role in forcibly removing dogs mirrors the quarantine politics explored in The Last of Us. Cultural relativism, drawn from Rivikin-Fish, explains why victims choose love over sight. Community consent, central to Walker's lecture, underlies the inability of any institution to act decisively.</p>
     </div>
 
+    <div class="about-block">
+      <h3>AI Statement</h3>
+      <p>No AI was used in the content of our work. It was only used to build the website.</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- FAQ PAGE -->
+<div id="page-faq" class="page">
+  <div class="inner-page">
+    <h1 class="page-title">FAQ</h1>
+    <div class="page-sub">Frequently Asked Questions · Public Information Bureau</div>
+
+    <div id="faq-list">
+
+      <div class="faq-item" onclick="toggleFAQ(this)">
+        <div class="faq-q"><span>What is Eye-bies?</span><span class="faq-arrow">+</span></div>
+        <div class="faq-a">Eye-bies, formally known as Canine Achromatopsia-26 (CA-26), is a disease transmitted to humans through close contact with infected dogs. It causes a progressive and permanent loss of color vision, leaving the victim's world entirely in black and white. There is currently no known cure.</div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFAQ(this)">
+        <div class="faq-q"><span>How do you get infected?</span><span class="faq-arrow">+</span></div>
+        <div class="faq-a">The most documented pathway is through a dog licking near the owner's eyes after drinking from a contaminated water bowl. Some survivors also report contracting it through prolonged physical contact alone. Veterinarians have been infected during surgery despite full protective equipment. The exact mechanism remains disputed — scientists have not reached a consensus.</div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFAQ(this)">
+        <div class="faq-q"><span>Is there a cure?</span><span class="faq-arrow">+</span></div>
+        <div class="faq-a" style="color:rgba(230,57,70,0.85);">Doctors don't know. As of now, there is no confirmed treatment or cure for Eye-bies. Once color vision is lost, it has not been recovered in any documented case. Antidote research is ongoing but severely underfunded. If you are experiencing symptoms, seek medical attention immediately — even though options remain extremely limited.</div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFAQ(this)">
+        <div class="faq-q"><span>Can I keep my dog?</span><span class="faq-arrow">+</span></div>
+        <div class="faq-a">Health authorities advise against close contact with dogs in affected areas until further notice. However, no universal law has been passed due to ongoing disagreement between governments, scientists, and activist groups. Many owners have chosen to keep their dogs despite the risk. That decision — and its consequences — remains a personal one.</div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFAQ(this)">
+        <div class="faq-q"><span>Is it spreading human to human?</span><span class="faq-arrow">+</span></div>
+        <div class="faq-a">Doctors don't know. During the ocean crossing from the island, survivors began losing color vision after their dogs had been left behind — raising fears of human-to-human transmission. However, this has not been confirmed. Scientists are actively investigating but have not yet determined whether infected humans can spread the disease to others.</div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFAQ(this)">
+        <div class="faq-q"><span>What should I do if I notice color loss?</span><span class="faq-arrow">+</span></div>
+        <div class="faq-a">Contact a medical professional immediately. Document when you first noticed changes and any recent contact you have had with dogs. Do not panic — the disease progresses slowly in most cases. Avoid close contact with other people and animals until you have been assessed. Report your case to local health authorities to aid ongoing research.</div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFAQ(this)">
+        <div class="faq-q"><span>Where did it come from?</span><span class="faq-arrow">+</span></div>
+        <div class="faq-a">Eye-bies originated on a remote island in the Atlantic Ocean. A bacterial mutation developed silently in the island's dog population — showing no visible symptoms in the animals. Nobody knows what caused the mutation. Theories range from environmental contamination of the island's water supply to a spontaneous genetic event. The island has since been quarantined.</div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFAQ(this)">
+        <div class="faq-q"><span>Are dogs in danger?</span><span class="faq-arrow">+</span></div>
+        <div class="faq-a">The dogs themselves show no symptoms and appear completely healthy. They are, however, at the center of a growing political crisis. Some governments and health bodies have called for culling of dogs in affected areas. Animal rights groups are fighting back. The dogs are not suffering — but their future is deeply uncertain, caught between public health policy and the people who love them.</div>
+      </div>
+
+    </div>
+
   </div>
 </div>
 
@@ -994,7 +1063,7 @@ function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
-  const tabs=['home','about','timeline','cases','quiz','safety','press','refs'];
+  const tabs=['home','about','timeline','cases','quiz','safety','press','refs','faq'];
   const btn = document.querySelectorAll('.nav-tab')[tabs.indexOf(id)];
   if(btn) btn.classList.add('active');
   window.scrollTo(0,0);
@@ -1002,6 +1071,13 @@ function showPage(id){
   if(id!=='home') drain.style.opacity=0;
   if(id==='quiz') startQuiz();
   setTimeout(()=>{checkReveals();checkGrowRules();checkTimeline();},100);
+}
+
+// FAQ TOGGLE
+function toggleFAQ(el){
+  const isOpen = el.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+  if(!isOpen) el.classList.add('open');
 }
 
 // IMAGE VIEWER
