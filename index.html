@@ -43,6 +43,10 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;
 #cursor-ring{position:fixed;width:48px;height:48px;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);border:1.5px solid rgba(230,57,70,0);border-radius:50%;transition:border-color 0.2s,width 0.2s,height 0.2s;}
 #cursor-ring.hovering{border-color:rgba(230,57,70,0.5);width:58px;height:58px;animation:ring-pulse 1.2s ease-in-out infinite;}
 @keyframes ring-pulse{0%,100%{box-shadow:0 0 0 0 rgba(230,57,70,0.12)}50%{box-shadow:0 0 0 8px rgba(230,57,70,0)}}
+@keyframes alarm-pulse{0%,100%{box-shadow:0 0 0 0 rgba(230,57,70,0)}50%{box-shadow:0 0 14px 3px rgba(230,57,70,0.18)}}
+#cure-reminder{position:fixed;bottom:28px;right:24px;z-index:6500;background:rgba(10,4,6,0.95);border:1px solid rgba(230,57,70,0.4);border-radius:4px;padding:12px 20px;display:flex;align-items:center;gap:10px;pointer-events:none;animation:reminder-in 0.6s 4s cubic-bezier(0.16,1,0.3,1) both,alarm-pulse 2.5s 4.6s ease-in-out infinite;}
+@keyframes reminder-in{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+#cure-reminder span{font-size:10px;letter-spacing:1.5px;color:rgba(230,57,70,0.9);font-family:'Space Mono',monospace;text-transform:uppercase;}
 
 /* COLOR DRAIN OVERLAY */
 #drain{position:fixed;inset:0;pointer-events:none;z-index:9000;mix-blend-mode:saturation;background:#04040a;opacity:0;}
@@ -295,6 +299,11 @@ nav{position:fixed;top:28px;left:0;right:0;z-index:7000;padding:0 40px;height:48
   <div class="side-code" style="animation-delay:5s;color:rgba(255,255,255,0.08);">EYE-BIES · 2026</div>
 </div>
 
+<div id="cure-reminder">
+  <div style="width:6px;height:6px;border-radius:50%;background:#e63946;animation:pulse-dot 1s infinite;flex-shrink:0;"></div>
+  <span>No Official Cure Yet — Stay Safe</span>
+</div>
+
 <div id="drain"></div>
 
 <div id="ticker">
@@ -352,7 +361,12 @@ nav{position:fixed;top:28px;left:0;right:0;z-index:7000;padding:0 40px;height:48
         <button class="btn-red" onclick="showPage('about')">Learn the Science</button>
         <button class="btn-ghost" onclick="openModal('survivor-modal')">Hear a Survivor</button>
       </div>
-      <div class="scroll-hint">↓ scroll to lose your color vision ↓</div>
+      <div style="margin-top:32px;display:inline-flex;align-items:center;gap:10px;background:rgba(230,57,70,0.08);border:1px solid rgba(230,57,70,0.35);border-radius:4px;padding:10px 20px;animation:alarm-pulse 2s ease-in-out infinite;">
+        <div style="width:7px;height:7px;border-radius:50%;background:#e63946;animation:pulse-dot 1s infinite;flex-shrink:0;"></div>
+        <span style="font-size:11px;letter-spacing:2px;color:#e63946;font-family:'Space Mono',monospace;text-transform:uppercase;font-weight:700;">No Official Cure Yet — Stay Safe</span>
+        <div style="width:7px;height:7px;border-radius:50%;background:#e63946;animation:pulse-dot 1s 0.5s infinite;flex-shrink:0;"></div>
+      </div>
+      <div class="scroll-hint" style="margin-top:24px;">↓ scroll to lose your color vision ↓</div>
       <div style="margin-top:48px;width:100%;max-width:640px;margin-left:auto;margin-right:auto;">
         <a href="https://youtu.be/gclD_x3ar6I" target="_blank" style="display:block;text-decoration:none;position:relative;cursor:none;" onmouseenter="this.querySelector('.play-overlay').style.background='rgba(0,0,0,0.55)'" onmouseleave="this.querySelector('.play-overlay').style.background='rgba(0,0,0,0.35)'">
           <div style="position:relative;border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,0.1);">
@@ -545,6 +559,14 @@ nav{position:fixed;top:28px;left:0;right:0;z-index:7000;padding:0 40px;height:48
       </div>
     </div>
   </section>
+
+  <div style="text-align:center;padding:32px 40px;background:rgba(230,57,70,0.04);border-top:1px solid rgba(230,57,70,0.1);border-bottom:1px solid rgba(230,57,70,0.1);">
+    <div style="display:inline-flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center;">
+      <div style="width:6px;height:6px;border-radius:50%;background:#e63946;animation:pulse-dot 1s infinite;"></div>
+      <span style="font-size:12px;letter-spacing:3px;color:rgba(230,57,70,0.7);font-family:'Space Mono',monospace;text-transform:uppercase;">Warning · No Official Cure Has Been Found · Avoid Dog Contact · Stay Safe</span>
+      <div style="width:6px;height:6px;border-radius:50%;background:#e63946;animation:pulse-dot 1s 0.5s infinite;"></div>
+    </div>
+  </div>
 
   <section id="ending-sec">
     <div class="sec-inner reveal">
