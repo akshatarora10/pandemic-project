@@ -318,6 +318,7 @@ nav{position:fixed;top:28px;left:0;right:0;z-index:7000;padding:0 40px;height:48
     <button class="nav-tab" onclick="showPage('quiz')">Risk Quiz</button>
     <button class="nav-tab" onclick="showPage('safety')">Safety</button>
     <button class="nav-tab" onclick="showPage('press')">Media</button>
+    <button class="nav-tab" onclick="showPage('refs')">References</button>
   </div>
   <div class="nav-counter">
     <div class="counter-dot"></div>
@@ -750,6 +751,50 @@ nav{position:fixed;top:28px;left:0;right:0;z-index:7000;padding:0 40px;height:48
   </div>
 </div>
 
+<!-- REFERENCES PAGE -->
+<div id="page-refs" class="page">
+  <div class="inner-page">
+    <h1 class="page-title">References</h1>
+    <div class="page-sub">Works Cited · IDST124I.001 · Pandemics: Ethics, Literature, Culture</div>
+
+    <div class="about-block">
+      <h3>Main Issue</h3>
+      <p>A zoonotic disease has spread into a full-blown pandemic, causing cultural issues, societal divisions, false media, and widespread panic throughout affected areas. At the center of the crisis is an ethical dilemma: humanity's bond with dogs set against the cost of keeping them — the loss of color vision, community safety, and collective consent.</p>
+    </div>
+
+    <div class="about-block">
+      <h3>Concepts from Class</h3>
+      <p>Biblical allusions · Stock characters · Conflicting narratives · Scapegoating and stigmatizing groups or individuals · Practical reason · Cultural issues · Cultural relativism · Government role in quarantine · Community consent · Ethics of public health policy</p>
+    </div>
+
+    <div class="about-block">
+      <h3>Primary Sources</h3>
+      <div style="margin-bottom:20px;padding:20px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);border-radius:4px;">
+        <p style="color:rgba(255,255,255,0.75);margin-bottom:8px;">Brooks, Max. <span style="font-style:italic;color:rgba(255,255,255,0.5);">World War Z: An Oral History of the Zombie War.</span> Crown Publishers, 2006, pp. 120–121.</p>
+        <p style="font-size:11px;color:rgba(255,255,255,0.3);line-height:1.7;">Relevant section depicts the mistreatment of a dog during the zombie outbreak, with the narrator clearly prioritizing the dog's wellbeing over human concerns — directly paralleling the ethical dilemma at the center of Eye-bies.</p>
+      </div>
+      <div style="margin-bottom:20px;padding:20px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);border-radius:4px;">
+        <p style="color:rgba(255,255,255,0.75);margin-bottom:8px;">Rivikin-Fish, Michele. "Anthropological Contributions to Understanding Malaria." Presentation slides, IDST124I.001 Pandemics: Ethics, Literature, Culture, University of North Carolina at Chapel Hill, 2026.</p>
+        <p style="font-size:11px;color:rgba(255,255,255,0.3);line-height:1.7;">Introduces cultural relativism as a framework — applicable to understanding why victims choose to keep their dogs despite losing color vision. Highlights the importance of viewing personal decisions through cultural and emotional context rather than purely rational judgment.</p>
+      </div>
+      <div style="margin-bottom:20px;padding:20px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);border-radius:4px;">
+        <p style="color:rgba(255,255,255,0.75);margin-bottom:8px;">Walker, Rebecca. "The Ethics of Gene Editing and Gene Drives as a Solution to Malaria." Presentation slides, IDST124I.001 Pandemics: Ethics, Literature, Culture, University of North Carolina at Chapel Hill, 2026.</p>
+        <p style="font-size:11px;color:rgba(255,255,255,0.3);line-height:1.7;">Addresses community consent and the ethics of intervention — directly mirrored in Eye-bies through the inability of governments, scientists, and activists to reach consensus on how to handle the infected dog population.</p>
+      </div>
+      <div style="padding:20px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);border-radius:4px;">
+        <p style="color:rgba(255,255,255,0.75);margin-bottom:8px;font-style:italic;">The Last of Us.</span> HBO, 2023.</p>
+        <p style="font-size:11px;color:rgba(255,255,255,0.3);line-height:1.7;">Government-enforced quarantine zones and the removal of individual freedoms during a pandemic parallel the Eye-bies crisis — where governments step in to forcibly separate dog owners from their pets, raising questions about authority, consent, and civil liberties during a public health emergency.</p>
+      </div>
+    </div>
+
+    <div class="about-block">
+      <h3>Connections to Class Themes</h3>
+      <p>Eye-bies engages with scapegoating through the targeting of dogs as the source of societal collapse. Conflicting narratives emerge between scientists, activists, and survivors — each offering a different account of how the disease spreads and what should be done. The government's role in forcibly removing dogs mirrors the quarantine politics explored in The Last of Us. Cultural relativism, drawn from Rivikin-Fish, explains why victims choose love over sight. Community consent, central to Walker's lecture, underlies the inability of any institution to act decisively.</p>
+    </div>
+
+  </div>
+</div>
+
 <!-- PDF FULLSCREEN VIEWER -->
 <div id="pdf-viewer" style="display:none;position:fixed;inset:0;z-index:50000;background:rgba(0,0,0,0.95);flex-direction:column;">
   <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid rgba(255,255,255,0.08);">
@@ -927,7 +972,7 @@ function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
-  const tabs=['home','about','timeline','cases','quiz','safety','press'];
+  const tabs=['home','about','timeline','cases','quiz','safety','press','refs'];
   const btn = document.querySelectorAll('.nav-tab')[tabs.indexOf(id)];
   if(btn) btn.classList.add('active');
   window.scrollTo(0,0);
